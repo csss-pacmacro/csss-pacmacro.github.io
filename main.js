@@ -2,7 +2,7 @@
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
+        navigator.geolocation.watchPosition(showPosition, showError);
     } else {
         geo.innerHTML = "Geolocation is not supported by this browser.";
     }
@@ -15,15 +15,12 @@ function showPosition(position) {
     let loc = {lat: position.coords.latitude, lng: position.coords.longitude};
     map.setCenter(loc);
     marker.setPosition(loc);
-
-    console.log("here");
-    map.setZoom(14.5);
 }
 
 function showError(error) {
     switch(error.code) {
       case error.PERMISSION_DENIED:
-        geo.innerHTML = "User denied the request for Geolocation."
+        geo.innerHTML = "User denied the request for Geolocation.<br> On ios, go to settings, location services, and make sure it's set to 'Ask Next Time Or When I Share', with 'Precise Location' enabled"
         break;
       case error.POSITION_UNAVAILABLE:
         geo.innerHTML = "Location information is unavailable."
@@ -42,13 +39,14 @@ function showError(error) {
 var map = null;
 var marker = null;
 
-function initMap(coords) {
+function initMap() {
     //const uluru = { lat: -25.344, lng: 131.031 };
     map = new google.maps.Map(
         document.getElementById("map"), 
-        {zoom: 4, center: coords} );
+        {zoom: 4, center: null} );
+    map.setZoom(14.5);
 
-    marker = new google.maps.Marker({ position: coords, map: map });
+    marker = new google.maps.Marker({ position: null, map: map });
 }
 
 window.initMap = initMap;
