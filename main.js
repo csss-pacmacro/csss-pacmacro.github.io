@@ -2,7 +2,7 @@
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: 2, enableHighAccuracy: true});
+        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: 2000, enableHighAccuracy: true});
     } else {
         geo.innerHTML = "Geolocation is not supported by this browser.";
     }
