@@ -23,9 +23,9 @@
   2. on campus, people should have wifi everywhere, so people could communicate through discord or just make plans in person beforehand.
   3. there are multiplayer pacman variants we can take inspiration from.
   4. what if everyone is a ghost & pacman is ai based?
-  5. different gamemodes?
+  5. different gamemodes? -> minimize chaos
 - will we have access inside the AQ?
-- will we do it outside & if so, will we be doing pacmacro at night?
+- will we do it outside & if so, will it be at night?
 - 
 
 # challenges:
@@ -48,5 +48,12 @@
   - host -> hardcoded password
   - viewer -> need to make an account? shows the location of all the people.
 - create chiptune music for the game !!
+- fruit as bonus points
 
 likely to be done in 2-4 weeks (will be on vacation for 1 of them & my next 7 days are fully booked)
+
+//
+
+- what do we want the gameplay to be like? **(the goal of this is to guage interest)**
+- will we have access inside the AQ?
+- will we do it outside & if so, will we be doing pacmacro at night?
