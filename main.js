@@ -2,7 +2,7 @@
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, showError);
+        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: Infinity, enableHighAccuracy: true});
     } else {
         geo.innerHTML = "Geolocation is not supported by this browser.";
     }
@@ -15,6 +15,8 @@ function showPosition(position) {
     let loc = {lat: position.coords.latitude, lng: position.coords.longitude};
     map.setCenter(loc);
     marker.setPosition(loc);
+
+    geo.innerHTML += "<br>" + new Date().getTime();
 }
 
 function showError(error) {
@@ -41,12 +43,13 @@ var marker = null;
 
 function initMap() {
     //const uluru = { lat: -25.344, lng: 131.031 };
+    let z = {lat:0,lng:0};
     map = new google.maps.Map(
         document.getElementById("map"), 
-        {zoom: 4, center: null} );
+        {zoom: 4, center: z} );
     map.setZoom(14.5);
 
-    marker = new google.maps.Marker({ position: null, map: map });
+    marker = new google.maps.Marker({ position: z, map: map });
 }
 
 window.initMap = initMap;
