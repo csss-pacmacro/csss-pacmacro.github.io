@@ -7,3 +7,6 @@ test website
 
 ### setup instructions:
 - idk, please @ me
+
+### TODO: 
+- restrict api key to https://csss-pacmacro-test.github.io/ only
