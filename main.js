@@ -14,13 +14,12 @@ function showPosition(position) {
     
     let loc = {lat: position.coords.latitude, lng: position.coords.longitude};
     map.setCenter(loc);
+    map.setTilt(0);
     marker.setPosition(loc);
 
     geo.innerHTML += "<br> time: " + position.timestamp;
-    geo.innerHTML += "<br> speed: " + position.speed;
-    geo.innerHTML += "<br> acc:" + position.accuracy;
-
-
+    geo.innerHTML += "<br> speed: " + position.coords.speed;
+    geo.innerHTML += "<br> acc:" + position.coords.accuracy;
 }
 
 function showError(error) {
