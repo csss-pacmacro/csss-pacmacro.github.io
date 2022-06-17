@@ -17,6 +17,7 @@ function showPosition(position) {
     marker.setPosition(loc);
 
     console.log("here");
+    map.setZoom(14.5);
 }
 
 function showError(error) {
