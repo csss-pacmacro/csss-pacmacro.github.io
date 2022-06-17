@@ -2,7 +2,7 @@
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: Infinity, enableHighAccuracy: true});
+        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: 2, enableHighAccuracy: true});
     } else {
         geo.innerHTML = "Geolocation is not supported by this browser.";
     }
@@ -16,7 +16,11 @@ function showPosition(position) {
     map.setCenter(loc);
     marker.setPosition(loc);
 
-    geo.innerHTML += "<br>" + new Date().getTime();
+    geo.innerHTML += "<br> time: " + position.timestamp;
+    geo.innerHTML += "<br> speed: " + position.speed;
+    geo.innerHTML += "<br> acc:" + position.accuracy;
+
+
 }
 
 function showError(error) {
