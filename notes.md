@@ -40,7 +40,7 @@
 - host device connected to a projector optional, but would be supported.
 
 # todo: 
-- access gps from a webpage -> get a github pages site -> make an org called csss-pacmacro-test.github.io
++ access gps from a webpage -> get a github pages site -> make an org called csss-pacmacro-test.github.io
 - setup an amazon ec2 instance or something small
 - talk to ec2 instance from website
 - 3 webpages:
@@ -49,6 +49,8 @@
   - viewer -> need to make an account? shows the location of all the people.
 - create chiptune music for the game !!
 - fruit as bonus points
+- enable realtime map editing
+- scout out locations for building the map 
 
 likely to be done in 2-4 weeks (will be on vacation for 1 of them & my next 7 days are fully booked)
 

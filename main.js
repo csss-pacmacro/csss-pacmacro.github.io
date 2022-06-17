@@ -57,5 +57,20 @@ function initMap() {
 
 window.initMap = initMap;
 
+// networking test
+
+function postTest() {
+    let serverIp = "34.84.79.41";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify({
+        msg: "hi",
+        lat: marker.getPosition().lat,
+        lng: marker.getPosition().lng,
+    }));
+
+}
 
 getLocation();
