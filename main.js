@@ -66,6 +66,7 @@ function postTest() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhr.onreadystatechange = function() { 
         // 4 means done
         if(xhr.readyState == 4 && xhr.status == 200) {
