@@ -45,7 +45,6 @@ var map = null;
 var marker = null;
 
 function initMap() {
-    //const uluru = { lat: -25.344, lng: 131.031 };
     let z = {lat:0,lng:0};
     map = new google.maps.Map(
         document.getElementById("map"), 
@@ -60,17 +59,26 @@ window.initMap = initMap;
 // networking test
 
 function postTest() {
-    let serverIp = "34.84.79.41";
+    let serverIp = "http://34.82.79.41:7555"; // 7555
+
+    console.log("did a POST hi");
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() { 
+        // 4 means done
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            console.log("responseText: " + xhr.responseText);
+        }
+        console.log("statusText: " + xhr.statusText);
+    }
+
     xhr.send(JSON.stringify({
         msg: "hi",
         lat: marker.getPosition().lat,
         lng: marker.getPosition().lng,
     }));
-
 }
 
 getLocation();
