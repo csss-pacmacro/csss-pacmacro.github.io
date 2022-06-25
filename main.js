@@ -1,4 +1,6 @@
 
+var currentLoc = {lat: 0, lng: 0}
+
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
@@ -12,10 +14,10 @@ function showPosition(position) {
     geo.innerHTML = "Latitude: " + position.coords.latitude +
                     "<br>Longitude: " + position.coords.longitude;
     
-    let loc = {lat: position.coords.latitude, lng: position.coords.longitude};
-    map.setCenter(loc);
+    currentLoc = {lat: position.coords.latitude, lng: position.coords.longitude};
+    map.setCenter(currentLoc);
     map.setTilt(0);
-    marker.setPosition(loc);
+    marker.setPosition(currentLoc);
 
     geo.innerHTML += "<br> time: " + position.timestamp;
     geo.innerHTML += "<br> speed: " + position.coords.speed;
@@ -65,8 +67,8 @@ function postTest() {
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+    //xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
         if(xhr.readyState == 4 && xhr.status == 200) {
@@ -75,11 +77,13 @@ function postTest() {
         console.log("statusText: " + xhr.statusText);
     }
 
-    xhr.send(JSON.stringify({
-        msg: "hi",
-        lat: marker.getPosition().lat,
-        lng: marker.getPosition().lng,
-    }));
+    //xhr.send(JSON.stringify({
+    //    msg: "hi",
+    //    lat: marker.getPosition().lat,
+    //    lng: marker.getPosition().lng,
+    //}));
+
+    xhr.send("hi: " + currentLoc.lat + " , " + currentLoc.lng);
 }
 
 getLocation();

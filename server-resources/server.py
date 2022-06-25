@@ -29,7 +29,7 @@ class CORSHandler(BaseHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_response(200)
+        #self.send_response(200)
         BaseHTTPRequestHandler.end_headers(self)
 
 def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
