@@ -67,7 +67,6 @@ function postTest() {
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
-    //xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
@@ -76,12 +75,6 @@ function postTest() {
         }
         console.log("statusText: " + xhr.statusText);
     }
-
-    //xhr.send(JSON.stringify({
-    //    msg: "hi",
-    //    lat: marker.getPosition().lat,
-    //    lng: marker.getPosition().lng,
-    //}));
 
     xhr.send("hi: " + currentLoc.lat + " , " + currentLoc.lng);
 }

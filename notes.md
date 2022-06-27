@@ -41,8 +41,8 @@
 
 # todo: 
 + access gps from a webpage -> get a github pages site -> make an org called csss-pacmacro-test.github.io
-- setup an amazon ec2 instance or something small
-- talk to ec2 instance from website
++ setup an amazon ec2 instance or something small
++ talk to ec2 instance from website
 - 3 webpages:
   - ios & android phone
   - host -> hardcoded password

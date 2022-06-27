@@ -46,10 +46,14 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
 
 # this isn't working for some reason... have I set it up wrong?
 
-# TODO: use port 7555
+
 if __name__ == '__main__':
     from sys import argv
+    
+    use_special_port = True
 
+    if use_special_port:
+        run(port=7555)
     if len(argv) == 2:
         run(port=int(argv[1]))
     else:
