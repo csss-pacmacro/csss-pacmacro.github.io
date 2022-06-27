@@ -13,7 +13,7 @@ class CORSHandler(SimpleHTTPRequestHandler): #(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-    # TODO: implement custom file serving, maybe?
+    # TODO: implement custom file serving; should be easy enough
     '''
     def do_GET(self):
         f = self.send_head()
@@ -39,7 +39,7 @@ class CORSHandler(SimpleHTTPRequestHandler): #(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
-        # TODO: do something with data
+        # TODO: do stuff with data
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
