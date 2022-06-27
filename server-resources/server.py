@@ -4,20 +4,32 @@ Very simple HTTP server in python for logging requests
 Usage::
     ./server.py [<port>]
 """
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
 import logging
 
-class CORSHandler(BaseHTTPRequestHandler):
+class CORSHandler(SimpleHTTPRequestHandler): #(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+    # TODO: implement custom file serving, maybe?
+    '''
     def do_GET(self):
+        f = self.send_head()
+        if f:
+            try:
+                self.copyfile(f, self.wfile)
+            finally:
+                f.close()
+        
+        # -- before:
+        
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
-
+    '''
+    
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
@@ -26,6 +38,8 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+
+        # TODO: do something with data
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
