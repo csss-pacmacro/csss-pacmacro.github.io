@@ -61,7 +61,7 @@ window.initMap = initMap;
 // networking test
 
 function postTest() {
-    let serverIp = "http://34.82.79.41:7555"; // 7555
+    let serverIp = "http://34.82.79.41:7555";
 
     console.log("did a POST hi");
 

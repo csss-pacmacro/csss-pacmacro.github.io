@@ -7,6 +7,21 @@
     
     <body>
         <h2>Pacmacro Host Page</h2>
+
+        <!-- content -->
+
+        <label for="password-input">what's the password? </label>
+        <input id="password-input" type="password"></input>
+        <button type="submit" onclick="sendSecretPassphrase();">authenticate</button>
+
+        <div id="password-notice" style="background-color: #fcc; padding: 12px; margin: 24px; width: 300px; border-radius: 8px; box-shadow: 1px 2px 4px #666;">
+            <p>NOTE: <em>If you don't know the password, ssh into the server & find the password file</em></p>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script> -->
+        <script src="host.js"></script>
+
     </body>
 
 </html>

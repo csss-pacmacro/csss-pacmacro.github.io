@@ -19,6 +19,14 @@ class CORSHandler(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
 
+        print(self.path)
+        print("printing?")
+
+        if self.path == "host":
+            pass
+        else:
+            pass
+
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
