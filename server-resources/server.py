@@ -96,7 +96,7 @@ if __name__ == '__main__':
     use_special_port = True
     if use_special_port:
         run(port=7555)
-    if len(argv) == 2:
+    elif len(argv) == 2:
         run(port=int(argv[1]))
     else:
         run()
