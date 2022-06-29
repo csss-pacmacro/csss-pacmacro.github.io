@@ -49,8 +49,9 @@ class CORSHandler(BaseHTTPRequestHandler):
             self.wfile.write("edges: i,j i,j i,j i,j ".encode('utf-8'))
 
             # TODO: load maps from disk
-        else:
-            pass
+        elif path_head == "/host" & arg1 != thepassword:
+            self.wfile.write("\nwrong password T-T".encode('utf-8'))
+
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
