@@ -18,6 +18,21 @@ g_map_directory = "./maps"
 def load_maps_from_disk():
     pass
 
+def parse_args(path):
+    map = {}
+
+    split_path = path.split("?")
+    target = split_path[0]
+    
+    for item in split_path[1:]:
+        if not ("=" in item): # skip if it doesn't have an equal sign
+            continue
+        first_index = item.find("=") # tail may contain '='
+        head, tail = item[:first_index], item[first_index+1:]
+        map[head] = tail
+
+    return target, map
+
 # --------------------------------------------
 # everything else:
 
@@ -35,23 +50,23 @@ class CORSHandler(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
 
-        split_path = self.path.split("?")
-        path_head = split_path[0]
-        arg1 = split_path[1] if len(split_path) > 1 else None
-        #arg2 = split_path[1] if len(split_path) > 2 else None
+        target, argmap = parse_args(self.path)
+        
+        print("DEBUG:")
+        print(target)
+        print(argmap)
 
         # TODO: don't send password in plaintext
-        if path_head == "/host" and arg1 == thepassword:
+        if target == "/host" and argmap["pwd"] == thepassword:
             self.wfile.write("\npassword is correct, woo!".encode('utf-8'))
-            self.wfile.write("maps:".encode('utf-8'))
-            self.wfile.write("name: the cool map".encode('utf-8'))
-            self.wfile.write("points: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
-            self.wfile.write("edges: i,j i,j i,j i,j ".encode('utf-8'))
+            self.wfile.write("\nmaps:".encode('utf-8'))
+            self.wfile.write("\nname: the cool map".encode('utf-8'))
+            self.wfile.write("\npoints: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
+            self.wfile.write("\nedges: i,j i,j i,j i,j ".encode('utf-8'))
 
             # TODO: load maps from disk
         elif path_head == "/host" and arg1 != thepassword:
             self.wfile.write("\nwrong password T-T".encode('utf-8'))
-
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
@@ -66,7 +81,6 @@ class CORSHandler(BaseHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
-        #self.send_response(200)
         BaseHTTPRequestHandler.end_headers(self)
 
 def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
