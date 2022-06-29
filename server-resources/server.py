@@ -1,11 +1,27 @@
 #!/usr/bin/env python3
 """
-Very simple HTTP server in python for logging requests
+simple HTTP server in python 
 Usage::
     ./server.py [<port>]
 """
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
 import logging
+
+# --------------------------------------------
+# globals:
+
+g_map_directory = "./maps"
+
+# --------------------------------------------
+# util functions:
+
+def load_maps_from_disk():
+    pass
+
+# --------------------------------------------
+# everything else:
+
+thepassword = None
 
 class CORSHandler(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -19,11 +35,20 @@ class CORSHandler(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
 
-        print(self.path)
-        print("printing?")
+        split_path = self.path.split("?")
+        path_head = split_path[0]
+        arg1 = split_path[1] if len(split_path) > 1 else None
+        #arg2 = split_path[1] if len(split_path) > 2 else None
 
-        if self.path == "host":
-            pass
+        # TODO: don't send password in plaintext
+        if path_head == "/host" & arg1 == thepassword:
+            self.wfile.write("\npassword is correct, woo!".encode('utf-8'))
+            self.wfile.write("maps:".encode('utf-8'))
+            self.wfile.write("name: the cool map".encode('utf-8'))
+            self.wfile.write("points: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
+            self.wfile.write("edges: i,j i,j i,j i,j ".encode('utf-8'))
+
+            # TODO: load maps from disk
         else:
             pass
 
@@ -57,12 +82,17 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
 
 # this isn't working for some reason... have I set it up wrong?
 
-
 if __name__ == '__main__':
     from sys import argv
-    
-    use_special_port = True
 
+    print("start loading...")
+
+    with open("password", "r") as f:
+        thepassword = f.readline().strip()
+
+    print("loading complete")
+
+    use_special_port = True
     if use_special_port:
         run(port=7555)
     if len(argv) == 2:
