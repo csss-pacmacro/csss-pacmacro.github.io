@@ -1,5 +1,9 @@
 
+var secretPassphrase = ""
+
 function sendSecretPassphrase() {
+    secretPassphrase = document.getElementById("password-input").value;
+    document.getElementById("password-input").value = "";
 
     // TODO: for now, just send the password via plaintext -> in the future, the user asks server for a random string, then we encode that passphrase using our guess as to what the key is
 
@@ -38,13 +42,16 @@ function sendSecretPassphrase() {
     
     var xhr = new XMLHttpRequest();
     // encrypted password
-    xhr.open("GET", serverIp + "/host?pwd=" + document.getElementById("password-input").value, true);
+    xhr.open("GET", serverIp + "/host?pwd=" + secretPassphrase, true); // will need to send pwd with every request -> just... https?
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         if(xhr.readyState == 4 && xhr.status == 200) {
             console.log("pass-responseText: " + xhr.responseText);
+
+            // split the response text, 
+            document.getElementById("maps").innerHTML = "<div>map card</div>";
+            // add all the cards in a for loop -> make them editable via js
         }
-       //console.log("pass-statusText: " + xhr.statusText);
     }
     xhr.send();
     
