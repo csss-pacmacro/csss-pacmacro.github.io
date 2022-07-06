@@ -58,7 +58,7 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         # TODO: don't send password in plaintext
         if target == "/host" and argmap["pwd"] == thepassword:
-            self.wfile.write("\npassword is correct, woo!".encode('utf-8'))
+            self.wfile.write("\nright pass".encode('utf-8'))
             self.wfile.write("\nmaps:".encode('utf-8'))
             self.wfile.write("\nname: the cool map".encode('utf-8'))
             self.wfile.write("\npoints: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
@@ -66,7 +66,7 @@ class CORSHandler(BaseHTTPRequestHandler):
 
             # TODO: load maps from disk
         elif target == "/host" and argmap["pwd"] != thepassword:
-            self.wfile.write("\nwrong password T-T".encode('utf-8'))
+            self.wfile.write("\nwrong pass".encode('utf-8'))
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data

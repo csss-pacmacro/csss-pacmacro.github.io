@@ -46,11 +46,20 @@ function sendSecretPassphrase() {
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         if(xhr.readyState == 4 && xhr.status == 200) {
-            console.log("pass-responseText: " + xhr.responseText);
+            var list = xhr.responseText.split("\n");
+            console.log(list);
 
-            // split the response text, 
-            document.getElementById("maps").innerHTML = "<div>map card</div>";
-            // add all the cards in a for loop -> make them editable via js
+            if (list.length > 1 && list[1] == "wrong pass") {
+                alert("correct pass");
+
+                // split the response text, 
+                document.getElementById("maps").innerHTML = "<div style=\"margin: 8px; padding: 8px; background-color: #def\">map card</div>";
+                // add all the cards in a for loop -> make them editable via js
+                
+            } else {
+                alert("wrong pass");
+            }
+            
         }
     }
     xhr.send();
