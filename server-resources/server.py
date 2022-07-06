@@ -59,10 +59,9 @@ class CORSHandler(BaseHTTPRequestHandler):
         # TODO: don't send password in plaintext
         if target == "/host" and argmap["pwd"] == thepassword:
             self.wfile.write("\nright pass".encode('utf-8'))
-            self.wfile.write("\nmaps:".encode('utf-8'))
-            self.wfile.write("\nname: the cool map".encode('utf-8'))
-            self.wfile.write("\npoints: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
-            self.wfile.write("\nedges: i,j i,j i,j i,j ".encode('utf-8'))
+            self.wfile.write("\nthe cool map".encode('utf-8'))
+            self.wfile.write("#points: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
+            self.wfile.write("#edges: i,j i,j i,j i,j ".encode('utf-8'))
 
             # TODO: load maps from disk
         elif target == "/host" and argmap["pwd"] != thepassword:
