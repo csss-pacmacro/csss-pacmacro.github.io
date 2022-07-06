@@ -46,18 +46,32 @@ function sendSecretPassphrase() {
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         if(xhr.readyState == 4 && xhr.status == 200) {
-            var list = xhr.responseText.split("\n");
-            console.log(list);
+            let responseList = xhr.responseText.split("\n");
+            console.log(responseList);
 
-            if (list.length > 1 && list[1] == "wrong pass") {
-                alert("correct pass");
+            document.getElementById("maps").innerHTML = "";
 
-                // split the response text, 
-                document.getElementById("maps").innerHTML = "<div style=\"margin: 8px; padding: 8px; background-color: #def\">map card</div>";
+            if (responseList.length > 1 && responseList[1] == "right pass") {
+                responseList.slice(2).forEach(line => {
+                    let mapList = line.split("#")
+                    let name = mapList[0];
+                    let pointString = mapList[1];
+                    let edgeString = mapList[2];
+                
+                    let tmp = "<div style=\"margin: 8px; padding: 8px; background-color: #def\">";
+                    tmp += "<h4>Map Name: " + name + "</h4>";
+                    tmp += "<div style=\"width: 200px; height: 200px; margin: 8px; background-color: #fff; padding: 4px;\">" + pointString + "</div>"
+                    tmp += "</div>";
+
+                    console.log(tmp);
+
+                    document.getElementById("maps").innerHTML += tmp;
+                });
+
                 // add all the cards in a for loop -> make them editable via js
                 
             } else {
-                alert("wrong pass");
+                console.log("wrong pass");
             }
             
         }

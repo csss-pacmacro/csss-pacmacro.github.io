@@ -5,7 +5,7 @@ Usage::
     ./server.py [<port>]
 """
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
-import logging
+import os, logging
 
 # --------------------------------------------
 # globals:
@@ -59,11 +59,18 @@ class CORSHandler(BaseHTTPRequestHandler):
         # TODO: don't send password in plaintext
         if target == "/host" and argmap["pwd"] == thepassword:
             self.wfile.write("\nright pass".encode('utf-8'))
+
+            # write out all data files in the map directory
+            for file in os.listdir(g_map_directory):
+                if file.endswith(".dat"):
+                    with open(os.path.join(g_map_directory, file), "r") as f:
+                        map_data_string = f.readline().strip()
+                        self.wfile.write(map_data_string.encode('utf-8'))
+
             self.wfile.write("\nthe cool map".encode('utf-8'))
             self.wfile.write("#points: x,y x,y x,y x,y x,y".encode('utf-8')) # coords
             self.wfile.write("#edges: i,j i,j i,j i,j ".encode('utf-8'))
 
-            # TODO: load maps from disk
         elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
 
