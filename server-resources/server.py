@@ -65,7 +65,7 @@ class CORSHandler(BaseHTTPRequestHandler):
             self.wfile.write("\nedges: i,j i,j i,j i,j ".encode('utf-8'))
 
             # TODO: load maps from disk
-        elif path_head == "/host" and arg1 != thepassword:
+        elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong password T-T".encode('utf-8'))
 
     def do_POST(self):
