@@ -3,12 +3,124 @@ var secretPassphrase = ""
 
 var numMaps = 0;
 var mapList = [];
+var mapNames = [];
 var mapReady = [];
 var markerStorage = []; // a list of lists
 var edgeStorage = []; // ditto
 var lineStorage = []; // ditto
 
 var mapUpdateReq = null;
+
+// -----------------------------------
+
+var isHoldingCtrl = false;
+
+document.onkeyup = onKeyUp;       
+document.onkeydown = onKeyDown;       
+function onKeyUp(event) {
+    if (!event.ctrlKey) {
+        isHoldingCtrl = false;
+    }
+}
+function onKeyDown(event) {
+    if (event.ctrlKey) {
+        isHoldingCtrl = true;
+    }
+}
+
+// -----------------------------------
+
+function curry(f) { // curry(f) does the currying transform
+    return function(a) {
+        return function(b) {
+            return f(a, b);
+        };
+    };
+}
+
+// TODO: add removing of edges
+var firstVal = null;
+function onMarkerClick(index, event) {
+    if (isHoldingCtrl) {
+        let i = markerStorage[index].findIndex(marker => marker.getPosition() == event.latLng);
+        if (firstVal == null) {
+            firstVal = i;
+        } else {
+            if (firstVal == i) {
+                firstVal = null; 
+                return;
+            }
+
+            // TODO: check if there exists a duplicate edges & don't place if so
+
+            let edge = [firstVal, i];
+            let polyline = new google.maps.Polyline({
+                strokeColor: "#6699CC",
+                strokeOpacity: 1.0,
+                strokeWeight: 3,
+                geodesic: false,
+                map: mapList[index],
+            });
+
+            let path = [markerStorage[index][edge[0]].getPosition(), markerStorage[index][edge[1]].getPosition()];
+            polyline.setPath(path);
+            
+            lineStorage[index].push(polyline);
+            edgeStorage[index].push(edge);
+
+            firstVal = null;
+        }
+    }
+}
+
+var firstVal_rc = null;
+function onMarkerRightClick(index, event) {
+    if (isHoldingCtrl) {
+        console.log("rc");
+        let i = markerStorage[index].findIndex(marker => marker.getPosition() == event.latLng);
+        console.log(i);
+        if (firstVal_rc == null) {
+            firstVal_rc = i;
+        } else {
+            if (firstVal_rc == i) {
+                firstVal_rc = null; 
+                return;
+            }
+
+            mapReady[index] = false; // uncertain if this mutex works -> but at least it might help!
+
+            let endVal = edgeStorage[index].length;
+            for(let j = 0; j < endVal; j++) {
+                let edge = edgeStorage[index][j];
+                if (edge[0] == firstVal_rc && edge[1] == i || 
+                    edge[0] == i && edge[1] == firstVal_rc) {
+                    
+                    console.log("removed an edge");
+                    
+                    // swap edge location
+                    let tmp = edgeStorage[index][j];
+                    edgeStorage[index][j] = edgeStorage[index][edgeStorage[index].length-1];
+                    edgeStorage[index][edgeStorage[index].length-1] = tmp;
+
+                    tmp = lineStorage[index][j];
+                    tmp.setMap(null);
+                    lineStorage[index][j] = lineStorage[index][lineStorage[index].length-1];
+                    lineStorage[index][lineStorage[index].length-1] = tmp;
+
+                    // remove from end
+                    edgeStorage[index].pop(); 
+                    lineStorage[index].pop(); 
+
+                    break; // assume there is only one edge!
+                }
+            }
+
+            mapReady[index] = true;
+
+            firstVal_rc = null;
+        }
+    }
+}
 
 function sendSecretPassphrase() {
     secretPassphrase = document.getElementById("password-input").value;
@@ -60,100 +172,146 @@ function sendSecretPassphrase() {
 
             numMaps = 0;
             mapList = [];
+            mapNames = [];
 
             document.getElementById("maps").innerHTML = "";
 
             if (responseList.length > 1 && responseList[1] == "right pass") {
-                responseList.slice(2).forEach(line => {
-                    let mapDataList = line.split("#")
-                    let name = mapDataList[0];
-                    let pointString = mapDataList[1];
-                    let edgeString = mapDataList[2];
+                // create html for maps
+                {
+                    let i = 0;
+                    responseList.slice(2).forEach(line => {
+                        let mapDataList = line.split("#");
+                        let name = mapDataList[0];
+                        mapNames.push(name);
 
-                    // convert string into list of points
-                    let pointList = pointString.split(" ");
-                    pointList = pointList.map(pointStr => {
-                        let coords = pointStr.split(",");
-                        if (coords.length == 2) {
-                            return {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])};
-                        } else {
-                            // TODO: deal with accidental nulls
-                            return null; 
-                        }
+                        // build widget
+                        let tmp = "<div style=\"margin: 8px; padding: 8px; background-color: #def\">";
+                        tmp += "<h4>Map Name: " + name + "</h4>"; // <div id="map" style="height: 400px; width: 400px;"></div>
+                        tmp += "<p style=\"position:relative;left:380px;width:300px\">In order to move a marker left click it once, then left click a second time to place it. Right click to cancel movement.</p>";
+                        tmp += "<p style=\"position:relative;left:380px;width:300px\">Hold [Ctrl] & left click two markers to make a connection between them. Right click instead to remove a connection.</p>";
+                        tmp += "<div style=\"width: 350px; height: 350px; margin: 8px; margin-top: -65px;\" id=\"map"+i+"\"></div>"
+                        tmp += "<button id=\"updatemap"+i+"\" onclick=\"POST_mapData("+i+")\">update changes</button>";
+                        tmp += "<button id=\"addmarkermap"+i+"\" onclick=\"addMarker("+i+")\">add marker</button>";
+                        tmp += "<button id=\"removemarkermap"+i+"\" onclick=\"removeMarker("+i+")\">remove marker</button>";
+                        tmp += "</div>";
+
+                        // create & init the map
+                        numMaps += 1;
+                        document.getElementById("maps").innerHTML += tmp;    
+
+                        i++;
                     });
-                    console.log(pointList);
+                }
 
-                    let edgeList = edgeString.split(" ");
-                    edgeList = edgeList.map(edgeStr => {
-                        let indices = edgeStr.split(",");
-                        if (indices.length == 2) {
-                            return [parseInt(indices[0]), parseInt(indices[1])];
-                        } else {
-                            // TODO: deal with accidental nulls
-                            return null; 
-                        }
+                // init maps
+                {
+                    var mapOptions = {
+                        zoom: 15,
+                        center: {lat:0,lng:0},
+                        disableDefaultUI: true
+                    };
+
+                    let i=0;
+                    responseList.slice(2).forEach( _ => {
+                        // have to call these in order or it doesn't work ffs
+                        mapList[i] = new google.maps.Map(document.getElementById("map"+i), mapOptions);
+                        i++;
                     });
-                    console.log(edgeList);
+                }
 
-                    // build widget
-                    let tmp = "<div style=\"margin: 8px; padding: 8px; background-color: #def\">";
-                    tmp += "<h4>Map Name: " + name + "</h4>"; // <div id="map" style="height: 400px; width: 400px;"></div>
-                    tmp += "<p style=\"position:relative;left:380px;width:300px\">In order to move a marker left click it once, then left click a second time to place it. Right click to cancel movement.</p>";
-                    tmp += "<div style=\"width: 350px; height: 350px; margin: 8px; margin-top: -65px;\" id=\"map"+mapList.length+"\"></div>"
-                    tmp += "<button id=\"updatemap"+mapList.length+"\">update changes</button>";
-                    tmp += "<button id=\"addmarkermap"+mapList.length+"\">add marker</button>";
-                    tmp += "<button id=\"removemarkermap"+mapList.length+"\">remove marker</button>";
-                    tmp += "</div>";
-
-                    // create & init the map
-                    numMaps += 1;
-                    document.getElementById("maps").innerHTML += tmp;      
-                    initMap();
-
-                    mapList[numMaps-1].setCenter(pointList[0]);
-
-                    // display points
-                    markerStorage[numMaps-1] = [];
-                    lineStorage[numMaps-1] = [];
-                    edgeStorage[numMaps-1] = [];
-
-                    pointList.forEach(point => {
-                        let markerOptions = {
-                            position: point,
-                            map: mapList[numMaps-1],
-                            draggable: true,                          
-                        };
-
-                        let marker = new google.maps.Marker(markerOptions);
-                        markerStorage[numMaps-1].push(marker);
+                // manual synchronization ahahahahaha js why ;-;
+                {
+                    responseList.slice(2).forEach( _ => {
+                        mapReady.push(false);
                     });
-                    
-                    // draw edges
-                    edgeList.forEach(edge => {
-                        let polyline = new google.maps.Polyline({
-                            strokeColor: "#6699CC",
-                            strokeOpacity: 1.0,
-                            strokeWeight: 3,
-                            geodesic: false,
-                            map: mapList[numMaps-1],
+                }
+
+                // add data to maps & parse things
+                {
+                    let i = 0;
+                    responseList.slice(2).forEach(line => {
+                        let mapDataList = line.split("#")
+                        let pointString = mapDataList[1];
+                        let edgeString = mapDataList[2];
+
+                        // convert string into list of points
+                        let pointList = pointString.split(" ");
+                        pointList = pointList.map(pointStr => {
+                            let coords = pointStr.split(",");
+                            if (coords.length == 2) {
+                                return {lat: parseFloat(coords[0]), lng: parseFloat(coords[1])};
+                            } else {
+                                // TODO: deal with accidental nulls
+                                return null; 
+                            }
+                        });
+                        console.log(pointList);
+
+                        let edgeList = edgeString.split(" ");
+                        edgeList = edgeList.map(edgeStr => {
+                            let indices = edgeStr.split(",");
+                            if (indices.length == 2) {
+                                return [parseInt(indices[0]), parseInt(indices[1])];
+                            } else {
+                                // TODO: deal with accidental nulls
+                                return null; 
+                            }
+                        });
+                        console.log(edgeList);
+
+                        mapList[i].setCenter(pointList[0]);
+
+                        markerStorage[i] = [];
+                        lineStorage[i] = [];
+                        edgeStorage[i] = [];
+
+                        // add points
+                        pointList.forEach(point => {
+                            let markerOptions = {
+                                position: point,
+                                map: mapList[i],
+                                draggable: true,      
+                                clickable: true,
+                                title: markerStorage[i].length.toString(),
+                            };
+                            
+                            let marker = new google.maps.Marker(markerOptions);
+                            marker.addListener("click", curry(onMarkerClick)(i));
+                            marker.addListener("contextmenu", curry(onMarkerRightClick)(i));
+                            markerStorage[i].push(marker);
+                        });
+                        
+                        // draw edges
+                        edgeList.forEach(edge => {
+                            let polyline = new google.maps.Polyline({
+                                strokeColor: "#6699CC",
+                                strokeOpacity: 1.0,
+                                strokeWeight: 3,
+                                geodesic: false,
+                                map: mapList[i],
+                            });
+
+                            let path = [markerStorage[i][edge[0]].getPosition(), markerStorage[i][edge[1]].getPosition()];
+                            polyline.setPath(path);
+                            
+                            lineStorage[i].push(polyline);
+                            edgeStorage[i].push(edge);
                         });
 
-                        let path = [markerStorage[numMaps-1][edge[0]].getPosition(), markerStorage[numMaps-1][edge[1]].getPosition()];
-                        polyline.setPath(path);
-                        
-                        lineStorage[numMaps-1].push(polyline);
-                        edgeStorage[numMaps-1].push(edge);
+                        mapReady[i] = true; // everything is setup to update now :)
+
+                        // TODO: add option to hide markers, to better see the lines.
+
+                        i++;
                     });
-
-                    mapReady[numMaps-1] = true; // everything is setup to update now :)
-
-                    // TODO: add option to hide markers, to better see the lines.
-
-                });
+            
+                }
 
                 mapUpdateReq = window.requestAnimationFrame(mapUpdate);
 
                 document.getElementById("password-notice").style.visibility = "hidden";
+                document.getElementById("password-notice").style.position = "absolute";
 
             } else {
                 console.log("wrong pass");
@@ -162,6 +320,7 @@ function sendSecretPassphrase() {
                     cancelAnimationFrame(mapUpdateReq);
 
                 document.getElementById("password-notice").style.visibility = "visible";
+                document.getElementById("password-notice").style.position = "relative";
             }
             
         }
@@ -169,8 +328,75 @@ function sendSecretPassphrase() {
     xhr.send();
 }
 
-function POST_mapData() {
+function POST_mapData(index) {
+    let name = mapNames[index];
+    let points = null; // TODO: serialize the data // TODO: TODO: TODO: this this this
+    let edges = null; 
+    let mapdata = name + "#" + points + "#" + edges;
+
+    let serverIp = "http://34.82.79.41:7555/host/mapdata";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.onreadystatechange = function() { 
+        if(xhr.readyState == 4 && xhr.status == 200) { // 4 means done
+            console.log("post mapdata's responseText: " + xhr.responseText);
+        }
+    }
+
+    xhr.send(mapData);
+}
+
+function addMarker(index) {
+    let mapCenter = mapList[index].getCenter();
+    let markerOptions = {
+        position: mapCenter,
+        map: mapList[index],
+        draggable: true,
+        clickable: true,
+        title: markerStorage[index].length.toString(),
+    };
+
+    let marker = new google.maps.Marker(markerOptions);
+    marker.addListener("click", curry(onMarkerClick)(index));
+    marker.addListener("contextmenu", curry(onMarkerRightClick)(index));
+    markerStorage[index].push(marker);
+}
+
+function removeMarker(index) {
+    mapReady[index] = false; // haha look I had to make a mutex b/c js scary
     
+    let endIndex = markerStorage[index].length-1;
+    markerStorage[index][endIndex].setMap(null);
+    markerStorage[index].pop();
+
+    let endVal = edgeStorage[index].length;
+    for(let i = 0; i < endVal; i++) {
+        let edge = edgeStorage[index][i];
+        if (edge[0] == endIndex || edge[1] == endIndex) {
+            console.log("removed an edge");
+            
+            // swap edge location
+            let tmp = edgeStorage[index][i];
+            edgeStorage[index][i] = edgeStorage[index][edgeStorage[index].length-1];
+            edgeStorage[index][edgeStorage[index].length-1] = tmp;
+
+            tmp = lineStorage[index][i];
+            tmp.setMap(null);
+            lineStorage[index][i] = lineStorage[index][lineStorage[index].length-1];
+            lineStorage[index][lineStorage[index].length-1] = tmp;
+
+            // remove from end
+            edgeStorage[index].pop(); 
+            lineStorage[index].pop(); 
+
+            endVal -= 1; // no overcounting
+            i -= 1;
+        }
+    }
+
+    mapReady[index] = true;
 }
 
 function mapUpdate() {
@@ -190,26 +416,6 @@ function mapUpdate() {
     mapUpdateReq = window.requestAnimationFrame(mapUpdate);
 }
 
-//   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuJL-lFKGlIWGQhhm6wezUDI6WYgWW0PU&callback=initMap&v=quarterly" defer></script>
-
-// Attach your callback function to the `window` object
 window.initMap = function() {
-    if (numMaps != 0) {
-        let z = {lat:0,lng:0};
-        let mapOptions = {
-            zoom: 15, 
-            center: z,
-            zoomControl: false,
-            mapTypeControl: false,
-            scaleControl: false,
-            streetViewControl: false,
-            rotateControl: false,
-            fullscreenControl: false,
-        };
-        
-        let map = new google.maps.Map( document.getElementById("map"+mapList.length), mapOptions );
-        mapList.push(map);
-        mapReady.push(false); // not yet ready to update
-    }
 
 };
