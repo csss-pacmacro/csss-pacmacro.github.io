@@ -13,6 +13,7 @@ test website
 - // not yet: `pip install pycryptodome`
 - update `password` file from "default" to something else
 - open tcp port 7555 on the google firewall, turn on http mode (make sure firewall allows tcp port 80 for the webpages)
+- TODO: instructions on how to give the server the power to update maps to github
 - run server script: `python3 server-resources/server.py`
 - ...
 - if you need more help @ me
