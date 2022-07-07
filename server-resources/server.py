@@ -58,14 +58,14 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         # TODO: don't send password in plaintext
         if target == "/host" and argmap["pwd"] == thepassword:
-            self.wfile.write("\nright pass\n".encode('utf-8'))
+            self.wfile.write("\nright pass".encode('utf-8'))
 
             # write out all data files in the map directory
             for file in os.listdir(g_map_directory):
                 if file.endswith(".dat"):
                     with open(os.path.join(g_map_directory, file), "r") as f:
                         map_data_string = f.readline().strip()
-                        self.wfile.write(map_data_string.encode('utf-8'))
+                        self.wfile.write(("\n"+map_data_string).encode('utf-8'))
 
         elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
