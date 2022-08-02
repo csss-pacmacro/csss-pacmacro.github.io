@@ -91,7 +91,7 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     server_address = ('', port)
     
     httpd = server_class(server_address, handler_class)
-    httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile="../certs/server.pem", ssL_version=ssl.PROTOCOL_TLS)
+    httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile="../certs/server.pem", ssl_version=ssl.PROTOCOL_TLS)
     
     logging.info('Starting httpd on port ' + str(port) + '...\n')
     
