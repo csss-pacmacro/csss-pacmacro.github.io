@@ -159,7 +159,7 @@ function sendSecretPassphrase() {
     console.log(btoa(encrypted.salt));
     */
 
-    let serverIp = "http://34.82.79.41:7555";
+    let serverIp = "https://34.82.79.41:7555";
     
     var xhr = new XMLHttpRequest();
     // encrypted password
@@ -334,7 +334,7 @@ function POST_mapData(index) {
     let edges = null; 
     let mapdata = name + "#" + points + "#" + edges;
 
-    let serverIp = "http://34.82.79.41:7555/host/mapdata";
+    let serverIp = "https://34.82.79.41:7555/host/mapdata";
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
