@@ -18,6 +18,12 @@ test website
 - ...
 - if you need more help @ me
 
+### additional setup:
+- you'll need an https certificate for google pages to host the site. It's best to use a legit one rather than self sign it. Luckily https://www.cloudflare.com/ssl-free/ has one
+- if you want to self sign, then do `mkdir certs; cd certs`, then follow https://devcenter.heroku.com/articles/ssl-certificate-self
+- copy `server.key` into `server.crt` & rename to `server.pem`
+- 
+
 ### TODO: 
 - restrict api key to https://csss-pacmacro-test.github.io/ only ?
 - 

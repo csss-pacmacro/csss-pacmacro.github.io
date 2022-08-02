@@ -6,6 +6,7 @@ Usage::
 """
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
 import os, logging
+import ssl
 
 # --------------------------------------------
 # globals:
@@ -88,12 +89,17 @@ class CORSHandler(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
+    
     httpd = server_class(server_address, handler_class)
+    httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile="../certs/server.pem", ssL_version=ssl.PROTOCOL_TLS)
+    
     logging.info('Starting httpd on port ' + str(port) + '...\n')
+    
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
+    
     httpd.server_close()
     logging.info('Stopping httpd...\n')
 

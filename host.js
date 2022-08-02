@@ -417,5 +417,5 @@ function mapUpdate() {
 }
 
 window.initMap = function() {
-
+    // ?
 };
