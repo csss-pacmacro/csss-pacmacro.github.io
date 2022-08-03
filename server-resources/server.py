@@ -85,10 +85,10 @@ class CORSHandler(BaseHTTPRequestHandler):
         elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
         elif target == "/host/viewlobby" and argmap["pwd"] == thepassword:
-            outstr = ""
+            outstr = "\n"
             for (uid, name) in g_players_in_lobby:
                 outstr += uid + "," + name + " "
-            self.wfile.write("\n"+outstr.encode('utf-8'))
+            self.wfile.write(outstr.encode('utf-8'))
         elif target == "/view" and argmap["request"] == "locations":
             self.wfile.write("location data".encode('utf-8'))
         elif target == "/joingame":
