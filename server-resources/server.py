@@ -125,13 +125,12 @@ class CORSHandler(BaseHTTPRequestHandler):
             with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
                 f.write(post_data.decode('utf-8'))
                 
-        elif target == "/player/updateloc" and ("player_uid" in argmap) and int(argmap["player_uid"]) in g_players_in_lobby:
-
+        elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
             # update player with data
             if "lat" in argmap:
-                g_players_in_lobby[int(argmap["player_uid"])]["lat"] = float(argmap["lat"]) # TODO: make sure these are still double (not float)
+                g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"]) # TODO: make sure these are still double (not float)
             if "lng" in argmap:
-                g_players_in_lobby[int(argmap["player_uid"])]["lng"] = float(argmap["lng"])
+                g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
