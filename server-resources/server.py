@@ -124,6 +124,9 @@ class CORSHandler(BaseHTTPRequestHandler):
                 f.write(post_data.decode('utf-8'))
                 
         elif target == "/player/updateloc" and ("player_uid" in argmap) and int(argmap["player_uid"]) in g_players_in_lobby:
+            print("TEST ###")
+            print(argmap)
+
             # update player with data
             if "lat" in argmap:
                 g_players_in_lobby[int(argmap["player_uid"])]["lat"] = float(argmap["lat"]) # TODO: make sure these are still double (not float)

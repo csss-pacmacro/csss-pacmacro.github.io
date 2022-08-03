@@ -23,6 +23,8 @@ function joinGame() {
             player_uid = parseInt(xhr.responseText.split("\n")[1]);
             console.log("success joining game!\n")
             console.log("uid = " + player_uid.toString())
+
+            updateLocationOnServer()
         } else {
             console.log("game joining statusText: " + xhr.statusText);
         }
@@ -78,7 +80,8 @@ function showPosition(position) {
     geo.innerHTML += "<br> acc:" + position.coords.accuracy;
 
     // do a post request, giving this info to the server
-
+    updateLocationOnServer()
+    
     // TODO: do interpolation on client side i think
 }
 
