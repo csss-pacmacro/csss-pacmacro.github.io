@@ -11,7 +11,7 @@ import ssl
 # --------------------------------------------
 # globals:
 
-g_players_in_lobby = []
+g_players_in_lobby = {}
 
 g_map_directory = "./maps"
 g_all_maps = []
@@ -72,7 +72,7 @@ class CORSHandler(BaseHTTPRequestHandler):
         print(argmap)
 
         # TODO: don't send password in plaintext
-        if target == "/host" and argmap["pwd"] == thepassword:
+        if target == "/host" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
             self.wfile.write("\nright pass".encode('utf-8'))
 
             # write out all data files in the map directory
@@ -82,18 +82,29 @@ class CORSHandler(BaseHTTPRequestHandler):
                         map_data_string = f.readline().strip()
                         self.wfile.write(("\n"+map_data_string).encode('utf-8'))
 
-        elif target == "/host" and argmap["pwd"] != thepassword:
+        elif target == "/host" and ("pwd" in argmap) and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
-        elif target == "/host/viewlobby" and argmap["pwd"] == thepassword:
+
+        elif target == "/host/viewlobby" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
             outstr = "\n"
-            for (uid, name) in g_players_in_lobby:
-                outstr += str(uid) + "," + str(name) + " "
+            for player_obj in list(g_players_in_lobby.values()):
+                outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
             self.wfile.write(outstr.encode('utf-8'))
-        elif target == "/view" and argmap["request"] == "locations":
-            self.wfile.write("location data".encode('utf-8'))
+
+        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations":
+            self.wfile.write("location data".encode('utf-8')) # TODO: this
+
         elif target == "/joingame":
             player_uid = generate_uid() 
-            g_players_in_lobby += [(player_uid, argmap["name"] if ("name" in argmap) else "unknown player")]
+
+            player_obj = {}
+            player_obj["uid"] = player_uid
+            player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
+            player_obj["lat"] = 0.0
+            player_obj["lng"] = 0.0
+
+            g_players_in_lobby[player_uid] = player_obj
+
             self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
         
     def do_POST(self):
@@ -111,6 +122,13 @@ class CORSHandler(BaseHTTPRequestHandler):
             # overwrite
             with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
                 f.write(post_data.decode('utf-8'))
+                
+        elif target == "/player/updateloc" and ("player_uid" in argmap) and int(argmap["player_uid"]) in g_players_in_lobby:
+            # update player with data
+            if "lat" in argmap:
+                g_players_in_lobby[int(argmap["player_uid"])]["lat"] = float(argmap["lat"]) # TODO: make sure these are still double (not float)
+            if "lng" in argmap:
+                g_players_in_lobby[int(argmap["player_uid"])]["lng"] = float(argmap["lng"])
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')

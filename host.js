@@ -384,9 +384,16 @@ function checkLobby() {
             document.getElementById("lobby").innerHTML = "";
 
             // write out player data
-            let playerList = xhr.responseText.split(" ");
+            let playerList = xhr.responseText.split("\n")[1].split(" ");
             for (let i = 0; i < playerList.length; i++) {
-                document.getElementById("lobby").innerHTML += "<p>" + playerList[i] + "</p>";
+                if (playerList[i] == "")
+                    break;
+
+                let uid = playerList[i].split(",")[0]
+                let name = playerList[i].split(",")[1]
+                let lat = playerList[i].split(",")[2]
+                let lng = playerList[i].split(",")[3]
+                document.getElementById("lobby").innerHTML += "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + "</p>";
             }
 
         }
