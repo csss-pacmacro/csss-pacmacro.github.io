@@ -170,10 +170,17 @@ function sendSecretPassphrase() {
             let responseList = xhr.responseText.split("\n");
             console.log(responseList);
 
+            document.getElementById("controls").innerHTML = "<button id=\"startgame\" onclick=\"startGame()\">StartGame?</button><br><br>";
+            document.getElementById("controls").innerHTML += "<label for=\"gamemode\">game mode: </label>";
+            document.getElementById("controls").innerHTML += "<select name=\"gamemode\" id=\"gamemode\"><option>normal</option><option>roleswap</option></select><br><br>";
+            document.getElementById("controls").innerHTML += "<button id=\"startgame\" onclick=\"checkLobby()\">Check Lobby</button><br>"; // TODO: this should updated 4 times per second soon (no debug response)
+            document.getElementById("controls").innerHTML += "<label for=\"lobby\">game mode: </label>";
+            document.getElementById("controls").innerHTML += "<div id=\"lobby\"></div>";
+
             numMaps = 0;
             mapList = [];
             mapNames = [];
-
+            
             document.getElementById("maps").innerHTML = "";
 
             if (responseList.length > 1 && responseList[1] == "right pass") {
@@ -361,6 +368,33 @@ function POST_mapData(index) {
 
     xhr.send(mapString);
 }
+
+function startGame() {
+    console.log("does nothing...")
+}
+
+function checkLobby() {
+    let serverIp = "https://34.82.79.41:7555/host/viewlobby" + "?pwd=" + secretPassphrase;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", serverIp, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.onreadystatechange = function() { 
+        if(xhr.readyState == 4 && xhr.status == 200) { // 4 means done
+            document.getElementById("lobby").innerHTML = "";
+
+            // write out player data
+            let playerList = xhr.responseText.split(" ");
+            for (let i = 0; i < playerList.length; i++) {
+                document.getElementById("lobby").innerHTML += "<p>" + playerList[i] + "</p>";
+            }
+
+        }
+    }
+    xhr.send();
+}
+
+// -----------------------------------
 
 function addMarker(index) {
     let mapCenter = mapList[index].getCenter();

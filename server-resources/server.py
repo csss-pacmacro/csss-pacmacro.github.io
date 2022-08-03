@@ -11,6 +11,8 @@ import ssl
 # --------------------------------------------
 # globals:
 
+g_players_in_lobby = []
+
 g_map_directory = "./maps"
 g_all_maps = []
 for file in os.listdir(g_map_directory):
@@ -37,6 +39,12 @@ def parse_args(path):
         map[head] = tail
 
     return target, map
+
+_i = 0
+def generate_uid():
+    global _i
+    _i += 3
+    return _i
 
 # --------------------------------------------
 # everything else:
@@ -74,6 +82,17 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
+        elif target == "/host/viewlobby" and argmap["pwd"] == thepassword:
+            outstr = ""
+            for (uid, name) in g_players_in_lobby:
+                outstr += uid + "," + name + " "
+            self.wfile.write("\n"+outstr.encode('utf-8'))
+        elif target == "/view" and argmap["request"] == "locations":
+            self.wfile.write("location data".encode('utf-8'))
+        elif target == "/joingame":
+            player_uid = generate_uid() 
+            g_players_in_lobby += [(player_uid, argmap[argmap] if ("name" in argmap) else "unknown player")]
+            self.wfile.write("\n"+player_uid)
         
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
@@ -90,8 +109,6 @@ class CORSHandler(BaseHTTPRequestHandler):
             # overwrite
             with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
                 f.write(post_data.decode('utf-8'))
-        else:
-            pass
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
