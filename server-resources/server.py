@@ -117,6 +117,8 @@ class CORSHandler(BaseHTTPRequestHandler):
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
         target, argmap = parse_args(self.path)
+        logging.info("TEST ###\n")
+        logging.info(str(argmap) + "\n")
 
         if target == "/host/mapdata" and argmap["map_name"] in g_all_maps:
             # overwrite
@@ -124,8 +126,6 @@ class CORSHandler(BaseHTTPRequestHandler):
                 f.write(post_data.decode('utf-8'))
                 
         elif target == "/player/updateloc" and ("player_uid" in argmap) and int(argmap["player_uid"]) in g_players_in_lobby:
-            print("TEST ###")
-            print(argmap)
 
             # update player with data
             if "lat" in argmap:
