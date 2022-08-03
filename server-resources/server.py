@@ -94,7 +94,7 @@ class CORSHandler(BaseHTTPRequestHandler):
         elif target == "/joingame":
             player_uid = generate_uid() 
             g_players_in_lobby += [(player_uid, argmap["name"] if ("name" in argmap) else "unknown player")]
-            self.wfile.write("\n"+player_uid)
+            self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
         
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
