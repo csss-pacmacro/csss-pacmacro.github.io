@@ -330,8 +330,20 @@ function sendSecretPassphrase() {
 
 function POST_mapData(index) {
     let name = mapNames[index];
-    let points = pointStorage[index].toString();
-    let edges = edgeStorage[index].toString();
+    let points = "";
+    let edges = "";
+    for (let i = 0; i < markerStorage[index].length; i++) {
+        points += markerStorage[index][i].getPosition().lat + "," + markerStorage[index][i].getPosition().lng
+        if(i != markerStorage[index].length-1) {
+            points += " "
+        }
+    }
+    for (let i = 0; i < edgeStorage[index].length; i++) {
+        edges += edgeStorage[index][i][0].toString() + "," + edgeStorage[index][i][1].toString()
+        if(i != edgeStorage[index].length-1) {
+            edges += " "
+        }
+    }
     let mapString = name + "#" + points + "#" + edges;
 
     console.log(mapString)
