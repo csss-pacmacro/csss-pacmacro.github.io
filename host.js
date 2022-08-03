@@ -330,9 +330,23 @@ function sendSecretPassphrase() {
 
 function POST_mapData(index) {
     let name = mapNames[index];
-    let points = null; // TODO: serialize the data // TODO: TODO: TODO: this this this
-    let edges = null; 
+    let points = "";
+    let edges = "";
+    for (let i = 0; i < markerStorage[index].length; i++) {
+        points += markerStorage[index][i].getPosition().lat() + "," + markerStorage[index][i].getPosition().lng()
+        if(i != markerStorage[index].length-1) {
+            points += " "
+        }
+    }
+    for (let i = 0; i < edgeStorage[index].length; i++) {
+        edges += edgeStorage[index][i][0].toString() + "," + edgeStorage[index][i][1].toString()
+        if(i != edgeStorage[index].length-1) {
+            edges += " "
+        }
+    }
     let mapString = name + "#" + points + "#" + edges;
+
+    console.log(mapString)
 
     let serverIp = "https://34.82.79.41:7555/host/mapdata" + "?map_name=map" + (index).toString() + ".dat";
 
