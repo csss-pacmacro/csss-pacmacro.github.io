@@ -59,6 +59,8 @@ class CORSHandler(BaseHTTPRequestHandler):
 
     # no longer doing custom file serving; instead get requests will just be used to get player data & stuff
     def do_GET(self):
+        global g_players_in_lobby
+        
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
