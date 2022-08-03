@@ -12,17 +12,17 @@ test website
 - install python3 if it doesn't already exist -> something like `apt install python3` (it should just exist via `python3 --version`)
 - // not yet: `pip install pycryptodome`
 - update `password` file from "default" to something else
-- open tcp port 7555 on the google firewall, turn on http mode (make sure firewall allows tcp port 80 for the webpages)
+- open tcp port 7555 on the google firewall, turn on http & https mode (make sure firewall allows tcp port 80 for http file serving)
 - TODO: instructions on how to give the server the power to update maps to github
-- run server script: `python3 server-resources/server.py`
+- run server script: `sudo python3 server-resources/server.py 433`
 - ...
 - if you need more help @ me
 
 ### additional setup:
-- you'll need an https certificate for google pages to host the site. It's best to use a legit one rather than self sign it. Luckily https://www.cloudflare.com/ssl-free/ has one
-- if you want to self sign, then do `mkdir certs; cd certs`, then follow https://devcenter.heroku.com/articles/ssl-certificate-self
-- copy `server.key` into `server.crt` & rename to `server.pem`
-- 
+- you'll need an https certificate for google pages to host the site. It's best to use a legit one rather than self sign it. 
+- zerossl provides free 90 day ssl certificates -> put the certificate in the `certs/` dir -> do http file upload for authentication
+  - run `sudo python3 -m http.server 80` to temporarily serve files over http
+  - 
 
 ### TODO: 
 - restrict api key to https://csss-pacmacro-test.github.io/ only ?

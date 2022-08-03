@@ -70,7 +70,7 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         elif target == "/host" and argmap["pwd"] != thepassword:
             self.wfile.write("\nwrong pass".encode('utf-8'))
-
+        
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
@@ -91,7 +91,10 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     server_address = ('', port)
     
     httpd = server_class(server_address, handler_class)
-    httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, certfile="../certs/server.pem", ssl_version=ssl.PROTOCOL_TLS)
+    httpd.socket = ssl.wrap_socket(
+        httpd.socket, server_side=True, 
+        keyfile="../certs/key.pem",
+        certfile="../certs/certs.pem")#, ssl_version=ssl.PROTOCOL_TLS)
     
     logging.info('Starting httpd on port ' + str(port) + '...\n')
     
@@ -115,9 +118,9 @@ if __name__ == '__main__':
 
     print("loading complete")
 
-    use_special_port = True
+    use_special_port = False
     if use_special_port:
-        run(port=7555)
+        run(port=7555) # TODO: serve on port 433 for https?
     elif len(argv) == 2:
         run(port=int(argv[1]))
     else:
