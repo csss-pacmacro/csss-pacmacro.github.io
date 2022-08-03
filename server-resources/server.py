@@ -15,7 +15,7 @@ g_map_directory = "./maps"
 g_all_maps = []
 for file in os.listdir(g_map_directory):
     if file.endswith(".dat"):
-        g_all_maps += [file.name] # TODO: make sure this works
+        g_all_maps += [str(file)]
 
 # --------------------------------------------
 # util functions:
