@@ -93,7 +93,7 @@ class CORSHandler(BaseHTTPRequestHandler):
             self.wfile.write("location data".encode('utf-8'))
         elif target == "/joingame":
             player_uid = generate_uid() 
-            g_players_in_lobby += [(player_uid, argmap[argmap] if ("name" in argmap) else "unknown player")]
+            g_players_in_lobby += [(player_uid, argmap["name"] if ("name" in argmap) else "unknown player")]
             self.wfile.write("\n"+player_uid)
         
     def do_POST(self):
