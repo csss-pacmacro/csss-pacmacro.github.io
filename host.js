@@ -333,7 +333,7 @@ function POST_mapData(index) {
     let points = "";
     let edges = "";
     for (let i = 0; i < markerStorage[index].length; i++) {
-        points += markerStorage[index][i].getPosition().lat + "," + markerStorage[index][i].getPosition().lng
+        points += markerStorage[index][i].getPosition().lat() + "," + markerStorage[index][i].getPosition().lng()
         if(i != markerStorage[index].length-1) {
             points += " "
         }
@@ -359,7 +359,7 @@ function POST_mapData(index) {
         }
     }
 
-    //xhr.send(mapString);
+    xhr.send(mapString);
 }
 
 function addMarker(index) {
