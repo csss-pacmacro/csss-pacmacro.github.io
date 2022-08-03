@@ -332,9 +332,9 @@ function POST_mapData(index) {
     let name = mapNames[index];
     let points = null; // TODO: serialize the data // TODO: TODO: TODO: this this this
     let edges = null; 
-    let mapdata = name + "#" + points + "#" + edges;
+    let mapString = name + "#" + points + "#" + edges;
 
-    let serverIp = "https://34.82.79.41:7555/host/mapdata";
+    let serverIp = "https://34.82.79.41:7555/host/mapdata" + "?map_name=map" + (index).toString() + ".dat";
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp, true);
@@ -345,7 +345,7 @@ function POST_mapData(index) {
         }
     }
 
-    xhr.send(mapData);
+    xhr.send(mapString);
 }
 
 function addMarker(index) {

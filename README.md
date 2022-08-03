@@ -14,7 +14,7 @@ test website
 - update `password` file from "default" to something else
 - open tcp port 7555 on the google firewall, turn on http & https mode (make sure firewall allows tcp port 80 for http file serving)
 - TODO: instructions on how to give the server the power to update maps to github
-- run server script: `sudo python3 server-resources/server.py 433`
+- run server script: `sudo python3 server-resources/server.py 7555`
 - ...
 - if you need more help @ me
 
@@ -22,7 +22,7 @@ test website
 - you'll need an https certificate for google pages to host the site. It's best to use a legit one rather than self sign it. 
 - zerossl provides free 90 day ssl certificates -> put the certificate in the `certs/` dir -> do http file upload for authentication
   - run `sudo python3 -m http.server 80` to temporarily serve files over http
-  - 
+  - verify installation will fail, but it will work. Check https://app.zerossl.com/certificates to see if it's been issued
 
 ### TODO: 
 - restrict api key to https://csss-pacmacro-test.github.io/ only ?

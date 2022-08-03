@@ -12,6 +12,10 @@ import ssl
 # globals:
 
 g_map_directory = "./maps"
+g_all_maps = []
+for file in os.listdir(g_map_directory):
+    if file.endswith(".dat"):
+        g_all_maps += [file.name] # TODO: make sure this works
 
 # --------------------------------------------
 # util functions:
@@ -80,7 +84,14 @@ class CORSHandler(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
-        # TODO: do stuff with data
+        target, argmap = parse_args(self.path)
+
+        if target == "/host/mapdata" and argmap["map_name"] in g_all_maps:
+            # overwrite
+            with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
+                f.write(post_data.decode('utf-8'))
+        else:
+            pass
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -94,7 +105,7 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     httpd.socket = ssl.wrap_socket(
         httpd.socket, server_side=True, 
         keyfile="../certs/key.pem",
-        certfile="../certs/certs.pem")#, ssl_version=ssl.PROTOCOL_TLS)
+        certfile="../certs/certs.pem") # https support
     
     logging.info('Starting httpd on port ' + str(port) + '...\n')
     
