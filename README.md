@@ -14,8 +14,10 @@ test website
 - update `password` file from "default" to something else
 - open tcp port 7555 on the google firewall, turn on http & https mode (make sure firewall allows tcp port 80 for http file serving)
 - TODO: instructions on how to give the server the power to update maps to github
-- run server script: `sudo python3 server-resources/server.py 7555`
-- ...
+
+### running instructions
+- run server script: `sudo python3 server.py 7555 &> log.txt &` This redirects stdout & stderr to log.txt & runs the process in the background 
+- `ps` to find pid -> `kill -9 <pid>` to kill the process 
 - if you need more help @ me
 
 ### additional setup:
