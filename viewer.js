@@ -47,8 +47,8 @@ function getPlayerData() {
                 let lat = playerList[i].split(",")[2]
                 let lng = playerList[i].split(",")[3]
 
-                markerList[i].setCursor(name)
-                markerList[i].setPosition({lat:lat, lng:lng})
+                markerList[i].setLabel(name)
+                markerList[i].setPosition({lat:parseFloat(lat), lng:parseFloat(lng)})
             }
 
         } else {

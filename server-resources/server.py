@@ -61,15 +61,19 @@ class CORSHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global g_players_in_lobby
         
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        target, argmap = parse_args(self.path)
+
+        if target != "/view":
+            logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        else:
+            logging.info("GET view req")
+
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
 
-        target, argmap = parse_args(self.path)
-        
-        print("DEBUG:")
-        print(target)
-        print(argmap)
+        #print("DEBUG:")
+        #print(target)
+        #print(argmap)
 
         # TODO: don't send password in plaintext
         if target == "/host" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
@@ -115,17 +119,23 @@ class CORSHandler(BaseHTTPRequestHandler):
                 del g_players_in_lobby[int(argmap["uid"])]
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length) # <--- Gets the data itself
-        logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                str(self.path), str(self.headers), post_data.decode('utf-8'))
-
-        self._set_response()
-        self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
         target, argmap = parse_args(self.path)
-        logging.info("TEST ###\n")
-        logging.info(str(argmap) + "\n")
+
+        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+        post_data = self.rfile.read(content_length) # <--- Gets the data itself
+
+        if target == "/player/updateloc":
+            logging.info("POST update loc")
+        else:
+            logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+                    str(self.path), str(self.headers), post_data.decode('utf-8'))
+
+            self._set_response()
+            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+
+        #logging.info("TEST ###\n")
+        #logging.info(str(argmap) + "\n")
 
         if target == "/host/mapdata" and argmap["map_name"] in g_all_maps:
             # overwrite
