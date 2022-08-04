@@ -15,6 +15,7 @@ function joinGame() {
     let serverIp = "https://34.82.79.41:7555";
 
     var xhr = new XMLHttpRequest();
+    // NOTE: code injection can be done here probably...
     xhr.open("GET", serverIp + "/joingame?name=" + document.getElementById('name').value, true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 

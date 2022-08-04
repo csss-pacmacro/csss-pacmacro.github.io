@@ -91,8 +91,11 @@ class CORSHandler(BaseHTTPRequestHandler):
                 outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
             self.wfile.write(outstr.encode('utf-8'))
 
-        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations":
-            self.wfile.write("location data".encode('utf-8')) # TODO: this
+        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": # currently idendical to view lobby
+            outstr = "\n"
+            for player_obj in list(g_players_in_lobby.values()):
+                outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
+            self.wfile.write(outstr.encode('utf-8'))
 
         elif target == "/joingame":
             player_uid = generate_uid() 
@@ -107,6 +110,10 @@ class CORSHandler(BaseHTTPRequestHandler):
 
             self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
         
+        elif target == "/leavegame" and ("uid" in argmap):
+            if int(argmap["uid"]) in g_players_in_lobby:
+                del g_players_in_lobby[int(argmap["uid"])]
+
     def do_POST(self):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
