@@ -77,7 +77,7 @@ function showPosition(position) {
     
     // update current location
     currentLoc = {lat: position.coords.latitude, lng: position.coords.longitude};
-    map.setCenter(currentLoc);
+    //map.setCenter(currentLoc);
     map.setTilt(0);
     marker.setPosition(currentLoc);
 
@@ -133,5 +133,9 @@ function startTracking() {
 }
 
 function stopTracking() {
-    clearInterval(interval);
+    clearInterval(interval)
+}
+
+function centerMap() {
+    map.setCenter(currentLoc)
 }
