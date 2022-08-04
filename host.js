@@ -173,6 +173,14 @@ function sendSecretPassphrase() {
             document.getElementById("controls").innerHTML = "<button id=\"startgame\" onclick=\"startGame()\">StartGame?</button><br><br>";
             document.getElementById("controls").innerHTML += "<label for=\"gamemode\">game mode: </label>";
             document.getElementById("controls").innerHTML += "<select name=\"gamemode\" id=\"gamemode\"><option>normal</option><option>roleswap</option></select><br><br>";
+            
+            document.getElementById("controls").innerHTML += "<label for=\"maptouse\">map to use: </label>";
+            let tmpval = "<select name=\"maptouse\" id=\"maptouse\">";
+            for (let i = 0; i < responseList.slice(2).length; i++) {
+                tmpval += "<option>map " + i + "</option>";
+            }
+            document.getElementById("controls").innerHTML += tmpval + "</select><br><br>";
+            
             document.getElementById("controls").innerHTML += "<button id=\"startgame\" onclick=\"checkLobby()\">Check Lobby</button><br>"; // TODO: this should updated 4 times per second soon (no debug response)
             document.getElementById("controls").innerHTML += "<label for=\"lobby\">game mode: </label>";
             document.getElementById("controls").innerHTML += "<div id=\"lobby\"></div>";
