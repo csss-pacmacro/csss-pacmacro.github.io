@@ -11,7 +11,10 @@ import ssl
 # --------------------------------------------
 # globals:
 
+HEARTBEAT_LENGTH = 20 # in seconds
+
 g_players_in_lobby = {}
+g_recently_dropped_players = {}
 
 g_map_directory = "./maps"
 g_all_maps = []
@@ -125,13 +128,16 @@ class CORSHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
 
+        self._set_response()
+
         if target == "/player/updateloc":
             logging.info("POST update loc")
+        else if target == "/player/heartbeat"
+            logging.info("POST heartbeat from player")
         else:
             logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                     str(self.path), str(self.headers), post_data.decode('utf-8'))
 
-            self._set_response()
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
         #logging.info("TEST ###\n")
@@ -141,13 +147,16 @@ class CORSHandler(BaseHTTPRequestHandler):
             # overwrite
             with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
                 f.write(post_data.decode('utf-8'))
-                
+        
         elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
             # update player with data
             if "lat" in argmap:
-                g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"]) # TODO: make sure these are still double (not float)
+                g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"])
             if "lng" in argmap:
                 g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
+
+        else if target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+            # update the player heartbeat map & don't kick player 
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -172,6 +181,12 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     
     httpd.server_close()
     logging.info('Stopping httpd...\n')
+
+# This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. They get told about this the next time they ask.
+def check_players_active():
+    for player in g_players_in_lobby:
+        if player.time > HEARTBEAT_LENGTH:
+            # drop player & send them a response if they ask a question
 
 # this isn't working for some reason... have I set it up wrong?
 

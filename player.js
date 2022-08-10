@@ -1,5 +1,10 @@
 // globals
 
+const HEARTBEAT_LENGTH = 20 // in seconds
+
+var awaitingJoinGame = false
+var joinedGame = false
+
 var currentLoc = {lat: 0, lng: 0}
 var player_uid = -1
 
@@ -7,8 +12,24 @@ var player_uid = -1
 // network requests
 
 function joinGame() {
-    if (document.getElementById('name').value == "") {
+    if (awaitingJoinGame) {
+        alert("awaiting join game")
+        return;
+    } else if (joinedGame) {
+        alert("already joined game")
+        return;
+    }
+
+    let name = document.getElementById('name').value.toString().trim()
+    if (name == "") {
         alert("put in a name first please")
+        return;
+    } if (name.includes("?") || 
+         name.includes("=") || 
+         name.includes(" ") || 
+         name.includes("\n") || 
+         name.includes("\t")) {
+        alert("name may not contain ?, =, or whitespace characters")
         return;
     }
 
@@ -16,7 +37,7 @@ function joinGame() {
 
     var xhr = new XMLHttpRequest();
     // NOTE: code injection can be done here probably...
-    xhr.open("GET", serverIp + "/joingame?name=" + document.getElementById('name').value, true);
+    xhr.open("GET", serverIp + "/joingame?name=" + name, true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
@@ -26,12 +47,20 @@ function joinGame() {
             console.log("uid = " + player_uid.toString())
 
             updateLocationOnServer()
-        } else {
-            console.log("game joining statusText: " + xhr.statusText);
+            awaitingJoinGame = false
+            joinedGame = true
+        } else if (xhr.readyState == 4) {
+            // TODO: is this correct?
+            awaitingJoinGame = false
+
+            console.log(xhr.readyState.toString())
+            console.log(xhr.status.toString())
+            console.log("FAILED :: game joining statusText: " + xhr.statusText)
         }
     }
 
-    xhr.send();
+    xhr.send()
+    awaitingJoinGame = true
 }
 
 function updateLocationOnServer() {
