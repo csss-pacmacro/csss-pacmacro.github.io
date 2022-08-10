@@ -178,9 +178,9 @@ window.initMap = initMap;
 
 getLocation();
 
-// window.onbeforeunload = function() {
-//     alert('Are you sure you want to leave?');
-// };
+window.onbeforeunload = function() {
+    leaveGame();
+};
 
 window.onunload = function() {
     // tell the server you're leaving
