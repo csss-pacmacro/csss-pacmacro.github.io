@@ -1,6 +1,6 @@
 // globals
 
-const HEARTBEAT_LENGTH = 20 // in seconds
+const HEARTBEAT_LENGTH = 10 // in seconds
 
 var awaitingJoinGame = false
 var joinedGame = false
@@ -83,6 +83,44 @@ function updateLocationOnServer() {
     xhr.send();
 }
 
+function leaveGame() {
+    if (awaitingJoinGame) {
+        console.log("awaiting join game; can't leave yet")
+        return;
+    } else if (!joinedGame) {
+        alert("haven't joined game, so can't leave")
+        return;
+    }
+
+    let name = document.getElementById('name').value.toString().trim()
+    if (name == "") {
+        alert("put in a name first please")
+        return;
+    } if (name.includes("?") || 
+         name.includes("=") || 
+         name.includes(" ") || 
+         name.includes("\n") || 
+         name.includes("\t")) {
+        alert("name may not contain ?, =, or whitespace characters")
+        return;
+    }
+
+    let serverIp = "https://34.82.79.41:7555";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp + "/player/leavegame?name=" + name, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.onreadystatechange = function() { 
+        // 4 means done 
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            // success
+            console.log("server accepts leaving game")
+        }
+    }
+
+    xhr.send();
+}
+
 // -----------------------------------
 // map stuff
 
@@ -150,3 +188,13 @@ function initMap() {
 window.initMap = initMap;
 
 getLocation();
+
+// window.onbeforeunload = function() {
+//     alert('Are you sure you want to leave?');
+// };
+
+window.onunload = function() {
+    // tell the server you're leaving
+    console.log('leave game');
+    leaveGame();
+}
