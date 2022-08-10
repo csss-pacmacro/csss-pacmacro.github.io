@@ -92,29 +92,18 @@ function leaveGame() {
         return;
     }
 
-    let name = document.getElementById('name').value.toString().trim()
-    if (name == "") {
-        alert("put in a name first please")
-        return;
-    } if (name.includes("?") || 
-         name.includes("=") || 
-         name.includes(" ") || 
-         name.includes("\n") || 
-         name.includes("\t")) {
-        alert("name may not contain ?, =, or whitespace characters")
-        return;
-    }
-
     let serverIp = "https://34.82.79.41:7555";
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", serverIp + "/player/leavegame?name=" + name, true);
+    xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done 
         if(xhr.readyState == 4 && xhr.status == 200) {
-            // success
             console.log("server accepts leaving game")
+            
+            player_uid = -1
+            joinedGame = false
         }
     }
 
