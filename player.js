@@ -180,10 +180,12 @@ getLocation();
 
 window.onbeforeunload = function() {
     leaveGame();
+    return null;
 };
 
 window.onunload = function() {
     // tell the server you're leaving
     console.log('leave game');
     leaveGame();
+    return null;
 }
