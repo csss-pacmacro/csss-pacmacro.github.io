@@ -185,6 +185,13 @@ window.onbeforeunload = function() {
 
 window.onunload = function() {
     // tell the server you're leaving
+    //console.log('leave game');
+    leaveGame();
+    return null;
+}
+
+window.onpagehide = function() {
+    // tell the server you're leaving
     console.log('leave game');
     leaveGame();
     return null;
