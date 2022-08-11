@@ -232,7 +232,7 @@ window.initMap = initMap;
 
 getLocation();
 
-document.getElementById("test").innerHTML += "<p>thejjjjjjjjjjjjj</p>";
+document.getElementById("test").innerHTML += "<p>thejjaaaaaaaaajjjjjjjjjjj</p>";
 
 /*
 // maybe???
