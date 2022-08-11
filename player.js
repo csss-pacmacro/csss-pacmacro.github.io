@@ -257,6 +257,10 @@ window.onpagehide = function(event) {
     return null;
 } */
 
+function closeEditorWarning(){
+    return 'Are you sure?'
+}
+window.onbeforeunload = closeEditorWarning;
 
 window.addEventListener('pagehide', () => {
     let serverIp = "https://34.82.79.41:7555";
@@ -264,8 +268,13 @@ window.addEventListener('pagehide', () => {
         method:'POST',
         headers:{
             'Content-Type': 'text/plain',
+            'Keep-Alive': true,
         },
-        body: "",
+        body: "a",
         keepalive: true // this is important!
-    })
+    });
+    const time = Date.now();
+    while ((Date.now() - time) < 500) {
+    }
+    return true;
 })
