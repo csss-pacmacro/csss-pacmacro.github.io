@@ -270,8 +270,6 @@ window.addEventListener('pagehide', () => {
         keepalive: true // this is important!
     });
     
-    window.open(url, '_blank');
-
     const time = Date.now();
     while ((Date.now() - time) < 500) {
     }
