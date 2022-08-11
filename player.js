@@ -232,6 +232,7 @@ window.initMap = initMap;
 
 getLocation();
 
+document.getElementById("test").innerHTML += "<p>wooooooooooooooooooo</p>";
 
 /*
 // maybe???
