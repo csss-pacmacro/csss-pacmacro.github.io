@@ -259,13 +259,23 @@ window.onpagehide = function(event) {
 
 window.onbeforeunload = function (e) {
     confirm("leave?");
-    
-    e = e || window.event;
+
+    if(!e) e = window.event;
 
     // For IE and Firefox prior to version 4
     if (e) {
         e.returnValue = 'Sure?';
     }
+
+	//e.cancelBubble is supported by IE - this will kill the bubbling process.
+	e.cancelBubble = true;
+	e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+
+	//e.stopPropagation works in Firefox.
+	if (e.stopPropagation) {
+		e.stopPropagation();
+		e.preventDefault();
+	}
 
     // For Safari
     return 'Sure?';
