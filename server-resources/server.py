@@ -64,102 +64,131 @@ class CORSHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global g_players_in_lobby
         
-        target, argmap = parse_args(self.path)
+        try:
+            target, argmap = parse_args(self.path)
 
-        if target != "/view":
-            logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-        #else:
-            #logging.info("GET view req")
+            if target != "/view":
+                logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
 
-        self._set_response()
-        self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+            self._set_response()
+            self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+            
+            ## ------------
+            ## requests
 
-        #print("DEBUG:")
-        #print(target)
-        #print(argmap)
+            # TODO: don't send password in plaintext
+            if target == "/host" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
+                self.wfile.write("\nright pass".encode('utf-8'))
 
-        # TODO: don't send password in plaintext
-        if target == "/host" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
-            self.wfile.write("\nright pass".encode('utf-8'))
+                # write out all data files in the map directory
+                for file in os.listdir(g_map_directory):
+                    if file.endswith(".dat"):
+                        with open(os.path.join(g_map_directory, file), "r") as f:
+                            map_data_string = f.readline().strip()
+                            self.wfile.write(("\n"+map_data_string).encode('utf-8'))
 
-            # write out all data files in the map directory
-            for file in os.listdir(g_map_directory):
-                if file.endswith(".dat"):
-                    with open(os.path.join(g_map_directory, file), "r") as f:
-                        map_data_string = f.readline().strip()
-                        self.wfile.write(("\n"+map_data_string).encode('utf-8'))
+            elif target == "/host" and ("pwd" in argmap) and argmap["pwd"] != thepassword:
+                self.wfile.write("\nwrong pass".encode('utf-8'))
 
-        elif target == "/host" and ("pwd" in argmap) and argmap["pwd"] != thepassword:
-            self.wfile.write("\nwrong pass".encode('utf-8'))
+            elif target == "/host/viewlobby" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
+                check_players_active()
 
-        elif target == "/host/viewlobby" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
-            outstr = "\n"
-            for player_obj in list(g_players_in_lobby.values()):
-                outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
-            self.wfile.write(outstr.encode('utf-8'))
+                outstr = "\n"
+                for player_obj in list(g_players_in_lobby.values()):
+                    outstr += str(player_obj["uid"]) + ","
+                    outstr += str(player_obj["name"]) + ","
+                    outstr += str(player_obj["lat"]) + ","
+                    outstr += str(player_obj["lng"]) + ","
+                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
+                self.wfile.write(outstr.encode('utf-8'))
 
-        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": # currently idendical to view lobby
-            outstr = "\n"
-            for player_obj in list(g_players_in_lobby.values()):
-                outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
-            self.wfile.write(outstr.encode('utf-8'))
+            elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": 
+                # NOTE: currently idendical to /host/viewlobby
+                check_players_active()
+                
+                outstr = "\n"
+                for player_obj in list(g_players_in_lobby.values()):
+                    outstr += str(player_obj["uid"]) + ","
+                    outstr += str(player_obj["name"]) + ","
+                    outstr += str(player_obj["lat"]) + ","
+                    outstr += str(player_obj["lng"]) + ","
+                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
+                self.wfile.write(outstr.encode('utf-8'))
 
-        elif target == "/joingame":
-            player_uid = generate_uid() 
+            elif target == "/joingame":
+                player_uid = generate_uid() 
 
-            player_obj = {}
-            player_obj["uid"] = player_uid
-            player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
-            player_obj["lat"] = 0.0
-            player_obj["lng"] = 0.0
-            player_obj["last_update"] = 10.0
+                player_obj = {}
+                player_obj["uid"] = player_uid
+                player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
+                player_obj["lat"] = 0.0
+                player_obj["lng"] = 0.0
+                player_obj["last_update"] = datetime.datetime.now()
 
-            g_players_in_lobby[player_uid] = player_obj
+                g_players_in_lobby[player_uid] = player_obj
 
-            self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
+                self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
+
+        except e as Exception:
+            print("bad error in GET request !!!")
 
     def do_POST(self):
+        global g_players_in_lobby
 
-        target, argmap = parse_args(self.path)
+        try:
+            target, argmap = parse_args(self.path)
 
-        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-        post_data = self.rfile.read(content_length) # <--- Gets the data itself
+            content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+            post_data = self.rfile.read(content_length) # <--- Gets the data itself
 
-        self._set_response()
+            self._set_response()
 
-        #if target == "/player/updateloc":
-        #    logging.info("POST update loc")
-        if target == "/player/heartbeat":
-            pass
-            #logging.info("POST heartbeat from player")
-        else:
-            logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-                    str(self.path), str(self.headers), post_data.decode('utf-8'))
+            ## ------------
+            ## logging
 
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+            if target == "/player/updateloc":
+                #logging.info("POST update loc")
+                pass
+            elif target == "/player/heartbeat":
+                pass
+                #logging.info("POST heartbeat from player")
+            else:
+                logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+                        str(self.path), str(self.headers), post_data.decode('utf-8'))
 
-        if target == "/host/mapdata" and argmap["map_name"] in g_all_maps:
-            # overwrite
-            with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
-                f.write(post_data.decode('utf-8'))
-        
-        elif target == "/player/leavegame" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
-            del g_players_in_lobby[int(argmap["uid"])]
+                self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
-        elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
-            # update player with data
-            if "lat" in argmap:
-                g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"])
-            if "lng" in argmap:
-                g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
+            ## ------------
+            ## requests
 
-        elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
-            # update the player heartbeat map & don't kick player \
-            pass
+            if target == "/host/mapdata" and argmap["map_name"] in g_all_maps:
+                # overwrite
+                with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
+                    f.write(post_data.decode('utf-8'))
+            
+            elif target == "/player/leavegame" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+                del g_players_in_lobby[int(argmap["uid"])]
+
+            elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+                # update player with data
+                if "lat" in argmap:
+                    g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"])
+                if "lng" in argmap:
+                    g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
+
+                g_players_in_lobby[player_uid]["last_update"] = datetime.datetime.now()
+
+            elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+                # update the player heartbeat map & don't kick player \
+                g_players_in_lobby[player_uid]["last_update"] = datetime.datetime.now()
+
+        except e as Exception:
+            print("bad error in POST request !!!")   
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         BaseHTTPRequestHandler.end_headers(self)
+
 
 def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     logging.basicConfig(level=logging.INFO)
@@ -181,14 +210,35 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     httpd.server_close()
     logging.info('Stopping httpd...\n')
 
-# This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. They get told about this the next time they ask.
-def check_players_active():
-    for player in g_players_in_lobby:
-        if player.time > HEARTBEAT_LENGTH:
-            # drop player & send them a response if they ask a question
-            pass
 
-# this isn't working for some reason... have I set it up wrong?
+# -------------------------------------------------
+# game functions:
+
+# This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. 
+# They get told about this the next time they ask about the game
+def check_players_active():
+    current_time = datetime.datetime.now()
+
+    garbage = []
+    for player in g_players_in_lobby:
+        if (current_time - player["last_update"]) > HEARTBEAT_LENGTH:
+            # drop player (& send them a response if they ask a question)
+            g_recently_dropped_players[player["uid"]] = player
+            garbage.append(player["uid"])
+
+    for uid in garbage:
+        if uid in g_players_in_lobby:
+            del g_players_in_lobby[uid]
+
+def start_game():
+    # this
+    pass
+
+def end_game():
+    # this
+    g_recently_dropped_players.clear()
+
+# -------------------------------------------------
 
 if __name__ == '__main__':
     from sys import argv

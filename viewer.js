@@ -129,7 +129,7 @@ var interval;
 function startTracking() {
     interval = setInterval(function() {
         getPlayerData()
-    }, 500);
+    }, 1000/3); // 3 updates per second
 }
 
 function stopTracking() {
