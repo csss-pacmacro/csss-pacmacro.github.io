@@ -232,31 +232,6 @@ window.initMap = initMap;
 
 getLocation();
 
-document.getElementById("test").innerHTML += "<p>thejjaaaaaaaaajjjjjjjjjjj</p>";
-
-/*
-// maybe???
-function wait(ms) {
-    var start = Date.now(),
-        now = start;
-    while (now - start < ms) {
-      now = Date.now();
-    }
-}
-
-
-window.onpagehide = function(event) {
-
-    // tell the server you're leaving
-
-    leaveGameAsyncNoMatterWhat();
-    //wait(1);
-    //leaveGameSync();
-
-    console.log('leave game');
-    return null;
-} */
-
 window.onbeforeunload = function (e) {
     confirm("leave?");
 
@@ -282,6 +257,8 @@ window.onbeforeunload = function (e) {
 };
 
 window.addEventListener('pagehide', () => {
+    alert("page hiding");
+
     let serverIp = "https://34.82.79.41:7555";
     fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
         method:'POST',
@@ -293,6 +270,8 @@ window.addEventListener('pagehide', () => {
         keepalive: true // this is important!
     });
     
+    window.open(url, '_blank');
+
     const time = Date.now();
     while ((Date.now() - time) < 500) {
     }
