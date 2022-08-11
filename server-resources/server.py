@@ -68,8 +68,8 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         if target != "/view":
             logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-        else:
-            logging.info("GET view req")
+        #else:
+            #logging.info("GET view req")
 
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -127,10 +127,11 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         self._set_response()
 
-        if target == "/player/updateloc":
-            logging.info("POST update loc")
-        elif target == "/player/heartbeat":
-            logging.info("POST heartbeat from player")
+        #if target == "/player/updateloc":
+        #    logging.info("POST update loc")
+        if target == "/player/heartbeat":
+            pass
+            #logging.info("POST heartbeat from player")
         else:
             logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                     str(self.path), str(self.headers), post_data.decode('utf-8'))

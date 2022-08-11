@@ -83,6 +83,7 @@ function updateLocationOnServer() {
     xhr.send();
 }
 
+// async
 function leaveGame() {
     if (awaitingJoinGame) {
         console.log("awaiting join game; can't leave yet")
@@ -93,6 +94,8 @@ function leaveGame() {
     }
 
     let serverIp = "https://34.82.79.41:7555";
+
+    /*
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
@@ -106,8 +109,59 @@ function leaveGame() {
             joinedGame = false
         }
     }
+    xhr.send();*/
 
+    fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
+        method:'POST',
+        headers:{
+            'Content-Type': 'text/plain',
+        },
+        body: "",
+        keepalive: true // this is important!
+    })
+}
+
+function leaveGameSync() {
+    if (awaitingJoinGame) {
+        console.log("awaiting join game; can't leave yet")
+        return;
+    } else if (!joinedGame) {
+        alert("haven't joined game, so can't leave")
+        return;
+    }
+
+    let serverIp = "https://34.82.79.41:7555";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, false);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+
+    xhr.send(null);
+    if (xhr.status === 200) {
+        // your request has been sent
+        console.log("sent! " + player_uid.toString());
+    }
+}
+
+function leaveGameAsyncNoMatterWhat() {
+    let serverIp = "https://34.82.79.41:7555";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.setRequestHeader('Keep-Alive', 'true');
+    xhr.onreadystatechange = function() { 
+        // 4 means done 
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            console.log("server accepts leaving game")
+            
+            player_uid = -1
+            joinedGame = false
+        }
+    }
+    xhr.timeout = 2000
     xhr.send();
+
 }
 
 // -----------------------------------
@@ -178,12 +232,66 @@ window.initMap = initMap;
 
 getLocation();
 
-// window.onbeforeunload = function() {
-//     alert('Are you sure you want to leave?');
-// };
+window.onbeforeunload = function (e) {
+    confirm("leave?");
 
-window.onunload = function() {
-    // tell the server you're leaving
-    console.log('leave game');
-    leaveGame();
-}
+    if(!e) e = window.event;
+
+    // For IE and Firefox prior to version 4
+    if (e) {
+        e.returnValue = 'Sure?';
+    }
+
+	//e.cancelBubble is supported by IE - this will kill the bubbling process.
+	e.cancelBubble = true;
+	e.returnValue = 'You sure you want to leave?'; //This is displayed on the dialog
+
+	//e.stopPropagation works in Firefox.
+	if (e.stopPropagation) {
+		e.stopPropagation();
+		e.preventDefault();
+	}
+
+    // For Safari
+    return 'Sure?';
+};
+
+window.addEventListener('pagehide', () => {
+    alert("page hiding");
+
+    let serverIp = "https://34.82.79.41:7555";
+    fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
+        method:'POST',
+        headers:{
+            'Content-Type': 'text/plain',
+            'Keep-Alive': true,
+        },
+        body: "a",
+        keepalive: true // this is important!
+    });
+    
+    const time = Date.now();
+    while ((Date.now() - time) < 500) {
+    }
+    
+    return true;
+})
+
+window.addEventListener("popstate", function(e) {
+    let serverIp = "https://34.82.79.41:7555";
+    fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
+        method:'POST',
+        headers:{
+            'Content-Type': 'text/plain',
+            'Keep-Alive': true,
+        },
+        body: "a",
+        keepalive: true // this is important!
+    });
+
+    const time = Date.now();
+    while ((Date.now() - time) < 500) {
+    }
+    
+    return true;
+});
