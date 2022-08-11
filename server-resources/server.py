@@ -68,15 +68,9 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         if target != "/view":
             logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-        #else:
-            #logging.info("GET view req")
 
         self._set_response()
         self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
-
-        #print("DEBUG:")
-        #print(target)
-        #print(argmap)
 
         # TODO: don't send password in plaintext
         if target == "/host" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
@@ -93,12 +87,17 @@ class CORSHandler(BaseHTTPRequestHandler):
             self.wfile.write("\nwrong pass".encode('utf-8'))
 
         elif target == "/host/viewlobby" and ("pwd" in argmap) and argmap["pwd"] == thepassword:
+            check_players_active()
+
             outstr = "\n"
             for player_obj in list(g_players_in_lobby.values()):
                 outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
             self.wfile.write(outstr.encode('utf-8'))
 
-        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": # currently idendical to view lobby
+        elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": 
+            # NOTE: currently idendical to /host/viewlobby
+            check_players_active()
+            
             outstr = "\n"
             for player_obj in list(g_players_in_lobby.values()):
                 outstr += str(player_obj["uid"]) + "," + player_obj["name"] + "," + str(player_obj["lat"]) + "," + str(player_obj["lng"]) + " "
@@ -112,7 +111,7 @@ class CORSHandler(BaseHTTPRequestHandler):
             player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
             player_obj["lat"] = 0.0
             player_obj["lng"] = 0.0
-            player_obj["last_update"] = 10.0
+            player_obj["last_update"] = datetime.datetime.now()
 
             g_players_in_lobby[player_uid] = player_obj
 
@@ -155,8 +154,8 @@ class CORSHandler(BaseHTTPRequestHandler):
 
         elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
             # update the player heartbeat map & don't kick player \
-            pass
-
+            g_players_in_lobby[player_uid]["last_update"] = datetime.datetime.now()
+            
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         BaseHTTPRequestHandler.end_headers(self)
@@ -181,14 +180,34 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     httpd.server_close()
     logging.info('Stopping httpd...\n')
 
-# This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. They get told about this the next time they ask.
-def check_players_active():
-    for player in g_players_in_lobby:
-        if player.time > HEARTBEAT_LENGTH:
-            # drop player & send them a response if they ask a question
-            pass
+# -------------------------------------------------
+# game functions:
 
-# this isn't working for some reason... have I set it up wrong?
+# This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. 
+# They get told about this the next time they ask about the game
+def check_players_active():
+    current_time = datetime.datetime.now()
+
+    garbage = []
+    for player in g_players_in_lobby:
+        if (current_time - player["last_update"]) > HEARTBEAT_LENGTH:
+            # drop player & send them a response if they ask a question
+            g_recently_dropped_players = player
+            garbage.append(player["uid"])
+
+    for uid in garbage:
+        if uid in g_players_in_lobby:
+            del g_players_in_lobby[uid]
+
+def start_game():
+    # this
+    pass
+
+def end_game():
+    # this
+    g_recently_dropped_players.clear()
+
+# -------------------------------------------------
 
 if __name__ == '__main__':
     from sys import argv
