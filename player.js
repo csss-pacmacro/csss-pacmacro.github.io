@@ -164,6 +164,41 @@ function leaveGameAsyncNoMatterWhat() {
 
 }
 
+function sendHeartbeat() {
+    if (awaitingJoinGame) {
+        return;
+    } else if (!joinedGame) {
+        return;
+    }
+
+    let serverIp = "https://34.82.79.41:7555";
+
+    /*
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.onreadystatechange = function() { 
+        // 4 means done 
+        if(xhr.readyState == 4 && xhr.status == 200) {
+            console.log("server accepts leaving game")
+            
+            player_uid = -1
+            joinedGame = false
+        }
+    }
+    xhr.send();*/
+
+    fetch(serverIp + "/player/heartbeat?uid=" + player_uid, {
+        method:'POST',
+        headers:{
+            'Content-Type': 'text/plain',
+        },
+        body: "empty",
+        keepalive: false
+    })
+}
+
 // -----------------------------------
 // map stuff
 
@@ -295,3 +330,20 @@ window.addEventListener("popstate", function(e) {
     
     return true;
 });
+
+
+// --------------
+
+var interval
+
+function startHeartbeats() {
+    interval = setInterval(function() {
+        sendHeartbeat()
+    }, 1000)
+}
+
+function stopHeartbeats() {
+    clearInterval(interval)
+}
+
+startHeartbeats()

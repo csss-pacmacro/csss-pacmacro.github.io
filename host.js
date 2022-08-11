@@ -181,7 +181,8 @@ function sendSecretPassphrase() {
             }
             document.getElementById("controls").innerHTML += tmpval + "</select><br><br>";
             
-            document.getElementById("controls").innerHTML += "<button id=\"startgame\" onclick=\"checkLobby()\">Check Lobby</button><br>"; // TODO: this should updated 4 times per second soon (no debug response)
+            document.getElementById("controls").innerHTML += "<button id=\"checklobbystart\" onclick=\"startLobbyTracking()\">Start Polling Lobby</button><br>";
+            document.getElementById("controls").innerHTML += "<button id=\"checklobbystop\" onclick=\"stopLobbyTracking()\">Stop Polling Lobby</button><br>";
             document.getElementById("controls").innerHTML += "<label for=\"lobby\">game mode: </label>";
             document.getElementById("controls").innerHTML += "<div id=\"lobby\"></div>";
 
@@ -391,6 +392,8 @@ function checkLobby() {
         if(xhr.readyState == 4 && xhr.status == 200) { // 4 means done
             document.getElementById("lobby").innerHTML = "";
 
+            let currentTime = parseFloat(Date.now())
+
             // write out player data
             let playerList = xhr.responseText.split("\n")[1].split(" ");
             for (let i = 0; i < playerList.length; i++) {
@@ -401,7 +404,11 @@ function checkLobby() {
                 let name = playerList[i].split(",")[1]
                 let lat = playerList[i].split(",")[2]
                 let lng = playerList[i].split(",")[3]
-                document.getElementById("lobby").innerHTML += "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + "</p>";
+                let time = parseFloat(playerList[i].split(",")[3])
+                let deltatime = currentTime - time
+
+                let str = "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + " d: <span style=\"color:green;\">" + deltatime / 1000.0 + "s</span></p>";
+                document.getElementById("lobby").innerHTML += str;
             }
 
         }
@@ -482,3 +489,17 @@ function mapUpdate() {
 window.initMap = function() {
     // ?
 };
+
+// --------------------------
+// init
+
+var interval;
+function startLobbyTracking() {
+    interval = setInterval(function() {
+        checkLobby()
+    }, 1000/3); // 3 updates per second
+}
+
+function stopLobbyTracking() {
+    clearInterval(interval)
+}
