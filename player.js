@@ -232,7 +232,7 @@ window.initMap = initMap;
 
 getLocation();
 
-document.getElementById("test").innerHTML += "<p>wooooooooooooooooooo</p>";
+document.getElementById("test").innerHTML += "<p>thejjjjjjjjjjjjj</p>";
 
 /*
 // maybe???
@@ -257,10 +257,19 @@ window.onpagehide = function(event) {
     return null;
 } */
 
-function closeEditorWarning(){
-    return 'Are you sure?'
-}
-window.onbeforeunload = closeEditorWarning;
+window.onbeforeunload = function (e) {
+    confirm("leave?");
+    
+    e = e || window.event;
+
+    // For IE and Firefox prior to version 4
+    if (e) {
+        e.returnValue = 'Sure?';
+    }
+
+    // For Safari
+    return 'Sure?';
+};
 
 window.addEventListener('pagehide', () => {
     let serverIp = "https://34.82.79.41:7555";
@@ -273,8 +282,29 @@ window.addEventListener('pagehide', () => {
         body: "a",
         keepalive: true // this is important!
     });
+    
     const time = Date.now();
     while ((Date.now() - time) < 500) {
     }
+    
     return true;
 })
+
+window.addEventListener("popstate", function(e) {
+    let serverIp = "https://34.82.79.41:7555";
+    fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
+        method:'POST',
+        headers:{
+            'Content-Type': 'text/plain',
+            'Keep-Alive': true,
+        },
+        body: "a",
+        keepalive: true // this is important!
+    });
+
+    const time = Date.now();
+    while ((Date.now() - time) < 500) {
+    }
+    
+    return true;
+});
