@@ -8,11 +8,11 @@ var joinedGame = false
 var currentLoc = {lat: 0, lng: 0}
 var player_uid = -1
 
-var spaceOpen0 = 0
-var spaceOpen1 = 0
-var spaceOpen2 = 0
-var spaceOpen3 = 0
-var spaceOpen4 = 0
+var spaceOpen0 = 1
+var spaceOpen1 = 1
+var spaceOpen2 = 1
+var spaceOpen3 = 1
+var spaceOpen4 = 1
 
 var selectedCharacter = -1
 
@@ -49,7 +49,7 @@ function joinGame() {
 
     var xhr = new XMLHttpRequest();
     // NOTE: code injection can be done here probably...
-    xhr.open("GET", serverIp + "/joingame?name=" + name + "?char=" + str(selectedCharacter), true);
+    xhr.open("GET", serverIp + "/joingame?name=" + name + "?char=" + (selectedCharacter).toString(), true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
@@ -419,14 +419,14 @@ function onClickPink() {
 }
 
 function updateSpaceOpenStyle() {
-    if (spaceOpen0)
+    if (spaceOpen0 == 0)
         document.getElementById("pacman").style += "filter: saturate(100%) brightness(65%);"
-    if (spaceOpen1)
+    if (spaceOpen1 == 0)
         document.getElementById("red").style += "filter: saturate(100%) brightness(65%);"
-    if (spaceOpen2)
+    if (spaceOpen2 == 0)
         document.getElementById("pink").style += "filter: saturate(100%) brightness(65%);"
-    if (spaceOpen3)
+    if (spaceOpen3 == 0)
         document.getElementById("orange").style += "filter: saturate(100%) brightness(65%);"
-    if (spaceOpen4)
+    if (spaceOpen4 == 0)
         document.getElementById("blue").style += "filter: saturate(100%) brightness(65%);"
 }

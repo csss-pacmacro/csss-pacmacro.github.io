@@ -190,6 +190,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                     f.write(post_data.decode('utf-8'))
             
             elif target == "/player/leavegame" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+                del g_characters_taken[g_players_in_lobby[uid]["char"]]
                 del g_players_in_lobby[int(argmap["uid"])]
 
             elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:

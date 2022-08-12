@@ -420,6 +420,7 @@ function checkLobby() {
                 //console.log(xhr.responseText)
                 let time = parseFloat(playerList[i].split(",")[4])
                 let deltatime = currentTime - time
+                console.log(parseInt(playerList[i].split(",")[5]))
                 let char = char_name[parseInt(playerList[i].split(",")[5])]
 
                 let str = "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + " with: " + char + " d: <span style=\"color:green;\">" + deltatime / 1000.0 + "s</span></p>";
