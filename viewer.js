@@ -1,7 +1,5 @@
 
 // lists
-var playerLocations = []
-var playerNames = []
 var markerList = []
 
 // the beeg map
@@ -26,6 +24,8 @@ function getPlayerData() {
             // write out player data
             let playerList = xhr.responseText.split("\n")[1].split(" ");
             
+            console.log(xhr.responseText)
+
             let numberOfPlayers = 0
             for (let i = 0; i < playerList.length; i++) {
                 if (playerList[i] == "")
@@ -36,6 +36,11 @@ function getPlayerData() {
 
             while (markerList.length < numberOfPlayers) {
                 markerList.push( new google.maps.Marker({ position: {lat:0,lng:0}, map: map }) )
+            }
+
+            while (markerList.length > numberOfPlayers) {
+                let marker = markerList.pop()
+                marker.setMap(null);
             }
             
             for (let i = 0; i < playerList.length; i++) {
