@@ -67,9 +67,11 @@ class CORSHandler(BaseHTTPRequestHandler):
         try:
             target, argmap = parse_args(self.path)
 
-            if target != "/view":
+            if target != "/view" and target != "/host/viewlobby":
                 logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-
+            elif target == "/host/viewlobby":
+                logging.info("GET viewlobby: " + str(int(float(player_obj["last_update"].timestamp()) * 1000)))
+                
             self._set_response()
             self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
             
@@ -176,11 +178,11 @@ class CORSHandler(BaseHTTPRequestHandler):
                 if "lng" in argmap:
                     g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
 
-                g_players_in_lobby[player_uid]["last_update"] = datetime.datetime.now()
+                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.now()
 
             elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
-                g_players_in_lobby[player_uid]["last_update"] = datetime.datetime.now()
+                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.now()
 
         except e as Exception:
             print("bad error in POST request !!!")   

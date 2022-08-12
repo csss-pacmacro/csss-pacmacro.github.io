@@ -95,8 +95,6 @@ function leaveGame() {
 
     let serverIp = "https://34.82.79.41:7555";
 
-    /*
-
     var xhr = new XMLHttpRequest();
     xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
@@ -109,8 +107,9 @@ function leaveGame() {
             joinedGame = false
         }
     }
-    xhr.send();*/
+    xhr.send();
 
+        /*
     fetch(serverIp + "/player/leavegame?uid=" + player_uid, {
         method:'POST',
         headers:{
@@ -118,7 +117,7 @@ function leaveGame() {
         },
         body: "",
         keepalive: true // this is important!
-    })
+    })*/
 }
 
 function leaveGameSync() {
