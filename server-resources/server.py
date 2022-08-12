@@ -123,7 +123,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                     outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
                 self.wfile.write(outstr.encode('utf-8'))
 
-            elif target == "/joingame" and ("char" in argmap) and is_valid_character(int(argmap["char"])):
+            elif target == "/joingame" and ("char" in argmap) and isinstance(argmap["char"], int) and is_valid_character(int(argmap["char"])):
 
                 if (int(argmap["char"]) in g_characters_taken):
                     chars_taken_str = ""
@@ -189,11 +189,11 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                 with open(os.path.join(g_map_directory, argmap["map_name"]), "w") as f:
                     f.write(post_data.decode('utf-8'))
             
-            elif target == "/player/leavegame" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+            elif target == "/player/leavegame" and ("uid" in argmap) and isinstance(argmap["uid"], int) and int(argmap["uid"]) in g_players_in_lobby:
                 del g_characters_taken[g_players_in_lobby[uid]["char"]]
                 del g_players_in_lobby[int(argmap["uid"])]
 
-            elif target == "/player/updateloc" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+            elif target == "/player/updateloc" and ("uid" in argmap) and isinstance(argmap["uid"], int)  and int(argmap["uid"]) in g_players_in_lobby:
                 # update player with data
                 if "lat" in argmap:
                     g_players_in_lobby[int(argmap["uid"])]["lat"] = float(argmap["lat"])
@@ -202,7 +202,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
-            elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
+            elif target == "/player/heartbeat" and ("uid" in argmap) and isinstance(argmap["uid"], int)  and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
@@ -272,7 +272,7 @@ def check_players_active():
             del g_players_in_lobby[uid]
 
 def is_valid_character(number):
-    if type(number) == type(0) and number >= 0 and number < 5:
+    if isinstance(number, int) and number >= 0 and number < 5:
         return True
     else:
         return False

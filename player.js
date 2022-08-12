@@ -22,9 +22,8 @@ var selectedCharacter = -1
 function joinGame() {
     if (selectedCharacter == -1) {
         alert("please choose a character!")
-    }
-
-    if (awaitingJoinGame) {
+        return;
+    } else if (awaitingJoinGame) {
         alert("awaiting join game")
         return;
     } else if (joinedGame) {
