@@ -74,6 +74,8 @@ function joinGame() {
                 console.log("success joining game!\n")
                 console.log("uid = " + player_uid.toString())
 
+                document.getElementById("response").innerHTML = "successfully joined game"
+
                 updateLocationOnServer()
                 awaitingJoinGame = false
                 joinedGame = true
@@ -132,6 +134,8 @@ function leaveGame() {
         // 4 means done 
         if(xhr.readyState == 4 && xhr.status == 200) {
             console.log("server accepts leaving game")
+
+            document.getElementById("response").innerHTML = "successfully left game"
             
             player_uid = -1
             joinedGame = false
@@ -169,6 +173,7 @@ function leaveGameSync() {
     if (xhr.status === 200) {
         // your request has been sent
         console.log("sent! " + player_uid.toString());
+        document.getElementById("response").innerHTML = "successfully left game"
     }
 }
 

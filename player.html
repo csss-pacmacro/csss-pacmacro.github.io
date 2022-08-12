@@ -9,27 +9,30 @@
     <body>
         <h2>Pacmacro Player Page</h2>
 
-        <h4>game details:</h4>
+        <div style="background-color: #ddd; width: 800px; padding: 20px; border-radius: 16px; box-shadow: 2px 4px 8px #777; margin: auto; left: 50%;">
+            <p><b style="font-size: 1.5em;">Game Details:</b></p>
 
-        <label for="name">your name: </label>
-        <input id="name"></input> <br>
-        <button onclick="joinGame()">Join the current game</button>
-        <button onclick="leaveGame()">Leave the current game</button>
+            <label for="name">your name: </label>
+            <input id="name"></input> <br><br>
+            <button onclick="joinGame()" style="height: 32px">Join the current game</button>
+            <button onclick="leaveGame()" style="height: 32px">Leave the current game</button>
 
-        <br>
-        <br>
-        <label>choose a character:</label>
-        <div>
-            <img class="choice-icon" id="pacman" src="res/sprites/pacman.png" onclick="onClickPacman()" width="128" height="128">
-            <img class="choice-icon" id="blue" src="res/sprites/blue.png" onclick="onClickBlue()" width="128" height="128">
-            <img class="choice-icon" id="red" src="res/sprites/red.png" onclick="onClickRed()" width="128" height="128">
-            <img class="choice-icon" id="orange" src="res/sprites/orange.png" onclick="onClickOrange()" width="128" height="128">
-            <img class="choice-icon" id="pink" src="res/sprites/pink.png" onclick="onClickPink()" width="128" height="128">
+            <br>
+            <br>
+            <label>choose a character:</label>
+            <div>
+                <img class="choice-icon" id="pacman" src="res/sprites/pacman.png" onclick="onClickPacman()" width="128" height="128">
+                <img class="choice-icon" id="blue" src="res/sprites/blue.png" onclick="onClickBlue()" width="128" height="128">
+                <img class="choice-icon" id="red" src="res/sprites/red.png" onclick="onClickRed()" width="128" height="128">
+                <img class="choice-icon" id="orange" src="res/sprites/orange.png" onclick="onClickOrange()" width="128" height="128">
+                <img class="choice-icon" id="pink" src="res/sprites/pink.png" onclick="onClickPink()" width="128" height="128">
+            </div>
+
+            <div id="response"> 
+
+            </div>
         </div>
-
-        <div id="response"> 
-
-        </div>
+        
 
         <h4>location details:</h4>
         <p id="geo"></p>

@@ -80,13 +80,19 @@ function getLocation() {
     }
 }
 
+var currentLoc = null;
+var lastCurrentLoc = null;
+
 function showPosition(position) {
     geo.innerHTML = "Latitude: " + position.coords.latitude +
                     "<br>Longitude: " + position.coords.longitude;
     
     // update current location
+    lastCurrentLoc = currentLoc;
     currentLoc = {lat: position.coords.latitude, lng: position.coords.longitude};
-    //map.setCenter(currentLoc);
+    
+    if (lastCurrentLoc == null)
+        map.setCenter(currentLoc);
     map.setTilt(0);
     marker.setPosition(currentLoc);
 
