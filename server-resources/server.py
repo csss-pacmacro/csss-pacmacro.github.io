@@ -70,7 +70,7 @@ class CORSHandler(BaseHTTPRequestHandler):
             if target != "/view" and target != "/host/viewlobby":
                 logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
             elif target == "/host/viewlobby":
-                logging.info("GET viewlobby: " + str(int(float(datetime.datetime.now().timestamp()) * 1000)))
+                logging.info("GET viewlobby: " + str(int(float(datetime.datetime.utcnow().timestamp()) * 1000)))
                 
             self._set_response()
             self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -125,7 +125,7 @@ class CORSHandler(BaseHTTPRequestHandler):
                 player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
                 player_obj["lat"] = 0.0
                 player_obj["lng"] = 0.0
-                player_obj["last_update"] = datetime.datetime.now()
+                player_obj["last_update"] = datetime.datetime.utcnow()
 
                 g_players_in_lobby[player_uid] = player_obj
 
@@ -180,11 +180,11 @@ class CORSHandler(BaseHTTPRequestHandler):
                 if "lng" in argmap:
                     g_players_in_lobby[int(argmap["uid"])]["lng"] = float(argmap["lng"])
 
-                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.now()
+                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
             elif target == "/player/heartbeat" and ("uid" in argmap) and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
-                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.now()
+                g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
         except Exception as e:
             print("bad error in POST request !!!")   
@@ -223,11 +223,11 @@ def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
 # This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. 
 # They get told about this the next time they ask about the game
 def check_players_active():
-    current_time = datetime.datetime.now()
+    current_time = datetime.datetime.utcnow()
 
     garbage = []
     for uid in g_players_in_lobby:
-        if (current_time - g_players_in_lobby[uid]["last_update"]) > HEARTBEAT_LENGTH:
+        if (current_time - g_players_in_lobby[uid]["last_update"]).seconds > HEARTBEAT_LENGTH:
             # drop player (& send them a response if they ask a question)
             g_recently_dropped_players[uid] = g_players_in_lobby[uid]
             garbage.append(uid)
