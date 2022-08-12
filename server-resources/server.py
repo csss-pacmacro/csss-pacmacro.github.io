@@ -55,6 +55,9 @@ def generate_uid():
 thepassword = None
 
 class NotCORSHandler(BaseHTTPRequestHandler):
+
+    request_queue_size = 128 # This should be plenty
+
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -200,7 +203,6 @@ def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
 
-    handler_class.request_queue_size = 128 # This should be plenty
     httpd = server_class(server_address, handler_class)
     httpd.socket = ssl.wrap_socket(
         httpd.socket, server_side=True, 
