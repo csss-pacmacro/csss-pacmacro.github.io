@@ -14,6 +14,7 @@ var spaceOpen2 = 1
 var spaceOpen3 = 1
 var spaceOpen4 = 1
 
+var realSelectedCharacter = -1
 var selectedCharacter = -1
 
 // -------------------------------------
@@ -47,8 +48,11 @@ function joinGame() {
     let serverIp = "https://34.82.79.41:7555";
 
     var xhr = new XMLHttpRequest();
-    // NOTE: code injection can be done here probably...
+    
+    // NOTE: code injection can be done here probably... (name) -> wait nevermind, I kinda fixed it
     xhr.open("GET", serverIp + "/joingame?name=" + name + "?char=" + (selectedCharacter).toString(), true);
+    realSelectedCharacter = selectedCharacter;
+
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
@@ -84,6 +88,7 @@ function joinGame() {
         } else if (xhr.readyState == 4) {
             // TODO: is this correct?
             awaitingJoinGame = false
+            realSelectedCharacter = -1
 
             console.log(xhr.readyState.toString())
             console.log(xhr.status.toString())

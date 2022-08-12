@@ -6,6 +6,14 @@ var markerList = []
 var map = null;
 var marker = null;
 
+var iconList = [
+    "res/sprites/pacman.png",
+    "res/sprites/red.png",
+    "res/sprites/pink.png",
+    "res/sprites/orange.png",
+    "res/sprites/blue.png"
+];
+
 // -------------------------------------
 // network requests
 
@@ -58,6 +66,16 @@ function getPlayerData() {
 
                 markerList[i].setLabel(name)
                 markerList[i].setPosition({lat:parseFloat(lat), lng:parseFloat(lng)})
+
+                let thisImage = {
+                    url: iconList[char],
+                    scaledSize: new google.maps.Size(48, 48),
+                    // The origin for this image is (0, 0).
+                    origin: new google.maps.Point(0, 0),
+                    // The anchor for this image is the base of the flagpole at (0, 32).
+                    anchor: new google.maps.Point(24, 48),
+                };
+                markerList[i].setIcon(thisImage)
                 
                 // TODO: give markers images
             }
