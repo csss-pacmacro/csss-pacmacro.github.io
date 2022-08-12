@@ -394,6 +394,11 @@ function checkLobby() {
 
             let currentTime = parseFloat(Date.now())
 
+            if ((typeof xhr.responseText) != "string") {
+                console.log("failed to recieve valid response")
+                return;
+            }
+
             // write out player data
             let playerList = xhr.responseText.split("\n")[1].split(" ");
             for (let i = 0; i < playerList.length; i++) {

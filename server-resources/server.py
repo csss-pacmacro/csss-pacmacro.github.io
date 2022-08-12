@@ -5,7 +5,7 @@ Usage::
     ./server.py [<port>]
 """
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
-import os, logging, datetime
+import os, logging, datetime, traceback
 import ssl
 
 # --------------------------------------------
@@ -134,6 +134,7 @@ class CORSHandler(BaseHTTPRequestHandler):
         except Exception as e:
             print("bad error in GET request !!!")
             print(str(e))
+            print(traceback.format_exc())
 
     def do_POST(self):
         global g_players_in_lobby
@@ -188,6 +189,7 @@ class CORSHandler(BaseHTTPRequestHandler):
         except Exception as e:
             print("bad error in POST request !!!")   
             print(str(e))
+            print(traceback.format_exc())
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
