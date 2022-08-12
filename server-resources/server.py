@@ -107,7 +107,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                     outstr += str(player_obj["name"]) + ","
                     outstr += str(player_obj["lat"]) + ","
                     outstr += str(player_obj["lng"]) + ","
-                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
+                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + ","
+                    outstr += str(player_obj["char"]) + " "
                 self.wfile.write(outstr.encode('utf-8'))
 
             elif target == "/view" and ("request" in argmap) and argmap["request"] == "locations": 
@@ -120,7 +121,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                     outstr += str(player_obj["name"]) + ","
                     outstr += str(player_obj["lat"]) + ","
                     outstr += str(player_obj["lng"]) + ","
-                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
+                    outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + ","
+                    outstr += str(player_obj["char"]) + " "
                 self.wfile.write(outstr.encode('utf-8'))
 
             elif target == "/joingame" and ("char" in argmap) and isinstance(argmap["char"], int) and is_valid_character(int(argmap["char"])):
