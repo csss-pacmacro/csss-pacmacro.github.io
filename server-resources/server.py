@@ -54,9 +54,10 @@ def generate_uid():
 
 thepassword = None
 
-class NotCORSHandler(BaseHTTPRequestHandler):
-
+class BeegHTTPServer(HTTPServer):
     request_queue_size = 128 # This should be plenty
+
+class NotCORSHandler(BaseHTTPRequestHandler):
 
     def _set_response(self):
         self.send_response(200)
@@ -199,11 +200,11 @@ class NotCORSHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
-def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
+def run(server_class=BeegHTTPServer, handler_class=NotCORSHandler, port=7555):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
 
-    print(handler_class.request_queue_size)
+    print(server_class.request_queue_size)
 
     httpd = server_class(server_address, handler_class)
     httpd.socket = ssl.wrap_socket(
