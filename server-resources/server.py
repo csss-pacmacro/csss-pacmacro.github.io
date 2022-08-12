@@ -70,7 +70,7 @@ class CORSHandler(BaseHTTPRequestHandler):
             if target != "/view" and target != "/host/viewlobby":
                 logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
             elif target == "/host/viewlobby":
-                logging.info("GET viewlobby: " + str(int(float(player_obj["last_update"].timestamp()) * 1000)))
+                logging.info("GET viewlobby: " + str(int(float(datetime.datetime.now().timestamp()) * 1000)))
                 
             self._set_response()
             self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -131,8 +131,9 @@ class CORSHandler(BaseHTTPRequestHandler):
 
                 self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
 
-        except e as Exception:
+        except Exception as e:
             print("bad error in GET request !!!")
+            print(str(e))
 
     def do_POST(self):
         global g_players_in_lobby
@@ -184,8 +185,9 @@ class CORSHandler(BaseHTTPRequestHandler):
                 # update the player heartbeat map & don't kick player \
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.now()
 
-        except e as Exception:
+        except Exception as e:
             print("bad error in POST request !!!")   
+            print(str(e))
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
