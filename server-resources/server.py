@@ -69,8 +69,6 @@ class CORSHandler(BaseHTTPRequestHandler):
 
             if target != "/view" and target != "/host/viewlobby":
                 logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
-            elif target == "/host/viewlobby":
-                logging.info("GET viewlobby: " + str(int(float(datetime.datetime.utcnow().timestamp()) * 1000)))
                 
             self._set_response()
             self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -195,6 +193,8 @@ class CORSHandler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         BaseHTTPRequestHandler.end_headers(self)
 
+    def log_message(self, format, *args):
+        return
 
 def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
     logging.basicConfig(level=logging.INFO)

@@ -394,6 +394,7 @@ function checkLobby() {
 
             let currentTime = parseFloat(Date.now())
 
+
             if ((typeof xhr.responseText) != "string") {
                 console.log("failed to recieve valid response")
                 return;
@@ -409,7 +410,8 @@ function checkLobby() {
                 let name = playerList[i].split(",")[1]
                 let lat = playerList[i].split(",")[2]
                 let lng = playerList[i].split(",")[3]
-                let time = parseFloat(playerList[i].split(",")[3])
+                //console.log(xhr.responseText)
+                let time = parseFloat(playerList[i].split(",")[4])
                 let deltatime = currentTime - time
 
                 let str = "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + " d: <span style=\"color:green;\">" + deltatime / 1000.0 + "s</span></p>";
