@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>Pacmacro Player Page</title>
+        <link rel="stylesheet" href="main.css">
     </head>
     
     <body>
@@ -14,6 +15,17 @@
         <input id="name"></input> <br>
         <button onclick="joinGame()">Join the current game</button>
         <button onclick="leaveGame()">Leave the current game</button>
+
+        <br>
+        <br>
+        <label>choose a character:</label>
+        <div>
+            <img class="choice-icon" id="pacman" src="res/sprites/pacman.png" onclick="onClickPacman()" width="128" height="128">
+            <img class="choice-icon" id="blue" src="res/sprites/blue.png" onclick="onClickBlue()" width="128" height="128">
+            <img class="choice-icon" id="red" src="res/sprites/red.png" onclick="onClickRed()" width="128" height="128">
+            <img class="choice-icon" id="orange" src="res/sprites/orange.png" onclick="onClickOrange()" width="128" height="128">
+            <img class="choice-icon" id="pink" src="res/sprites/pink.png" onclick="onClickPink()" width="128" height="128">
+        </div>
 
         <div id="response"> 
 

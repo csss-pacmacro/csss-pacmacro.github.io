@@ -11,8 +11,15 @@ import ssl
 # --------------------------------------------
 # globals:
 
-HEARTBEAT_LENGTH = 10 # in seconds
+HEARTBEAT_LENGTH = 25 # in seconds
 
+PACMAN = 0
+RED = 1
+PINK = 2
+ORANGE = 3
+BLUE = 4
+
+g_characters_taken = {}
 g_players_in_lobby = {}
 g_recently_dropped_players = {}
 
@@ -24,9 +31,6 @@ for file in os.listdir(g_map_directory):
 
 # --------------------------------------------
 # util functions:
-
-def load_maps_from_disk():
-    pass
 
 def parse_args(path):
     map = {}
@@ -119,19 +123,32 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                     outstr += str(int(float(player_obj["last_update"].timestamp()) * 1000)) + " "
                 self.wfile.write(outstr.encode('utf-8'))
 
-            elif target == "/joingame":
-                player_uid = generate_uid() 
+            elif target == "/joingame" and ("char" in argmap) and is_valid_character(int(argmap["char"])):
 
-                player_obj = {}
-                player_obj["uid"] = player_uid
-                player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
-                player_obj["lat"] = 0.0
-                player_obj["lng"] = 0.0
-                player_obj["last_update"] = datetime.datetime.utcnow()
+                if (int(argmap["char"]) in g_characters_taken):
+                    chars_taken_str = ""
+                    chars_taken_str += "0" if 0 in g_characters_taken else "1"
+                    chars_taken_str += "0" if 1 in g_characters_taken else "1"
+                    chars_taken_str += "0" if 2 in g_characters_taken else "1"
+                    chars_taken_str += "0" if 3 in g_characters_taken else "1"
+                    chars_taken_str += "0" if 4 in g_characters_taken else "1"
+                    self.wfile.write(("\n-1\n" + chars_taken_str).encode('utf-8')) # -1 means failure
 
-                g_players_in_lobby[player_uid] = player_obj
+                else:
+                    player_uid = generate_uid() 
 
-                self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
+                    player_obj = {}
+                    player_obj["uid"] = player_uid
+                    player_obj["name"] = argmap["name"] if ("name" in argmap) else "unknown player"
+                    player_obj["lat"] = 0.0
+                    player_obj["lng"] = 0.0
+                    player_obj["last_update"] = datetime.datetime.utcnow()
+                    player_obj["char"] = int(argmap["char"])
+
+                    g_players_in_lobby[player_uid] = player_obj
+                    g_characters_taken[int(argmap["char"])] = True
+
+                    self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
 
         except Exception as e:
             print("bad error in GET request !!!")
@@ -250,7 +267,14 @@ def check_players_active():
 
     for uid in garbage:
         if uid in g_players_in_lobby:
+            del g_characters_taken[g_players_in_lobby[uid]["char"]]
             del g_players_in_lobby[uid]
+
+def is_valid_character(number):
+    if type(number) == type(0) and number >= 0 and number < 5:
+        return True
+    else:
+        return False
 
 def start_game():
     # this

@@ -8,10 +8,22 @@ var joinedGame = false
 var currentLoc = {lat: 0, lng: 0}
 var player_uid = -1
 
+var spaceOpen0 = 0
+var spaceOpen1 = 0
+var spaceOpen2 = 0
+var spaceOpen3 = 0
+var spaceOpen4 = 0
+
+var selectedCharacter = -1
+
 // -------------------------------------
 // network requests
 
 function joinGame() {
+    if (selectedCharacter == -1) {
+        alert("please choose a character!")
+    }
+
     if (awaitingJoinGame) {
         alert("awaiting join game")
         return;
@@ -37,18 +49,35 @@ function joinGame() {
 
     var xhr = new XMLHttpRequest();
     // NOTE: code injection can be done here probably...
-    xhr.open("GET", serverIp + "/joingame?name=" + name, true);
+    xhr.open("GET", serverIp + "/joingame?name=" + name + "?char=" + str(selectedCharacter), true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.onreadystatechange = function() { 
         // 4 means done
         if(xhr.readyState == 4 && xhr.status == 200) {
             player_uid = parseInt(xhr.responseText.split("\n")[1]);
-            console.log("success joining game!\n")
-            console.log("uid = " + player_uid.toString())
+            
+            if (player_uid == -1) {
+                alert("oops! That character has already been taken\n")
+                spaceOpen0 = parseInt(xhr.responseText.split("\n")[2][0]);
+                spaceOpen1 = parseInt(xhr.responseText.split("\n")[2][1]);
+                spaceOpen2 = parseInt(xhr.responseText.split("\n")[2][2]);
+                spaceOpen3 = parseInt(xhr.responseText.split("\n")[2][3]);
+                spaceOpen4 = parseInt(xhr.responseText.split("\n")[2][4]);
 
-            updateLocationOnServer()
-            awaitingJoinGame = false
-            joinedGame = true
+                // TODO: disable characters that have been chosen
+
+                console.log(spaceOpen0 + " " + spaceOpen1 + " " + spaceOpen2 + " " + spaceOpen3 + " " + spaceOpen4)
+                awaitingJoinGame = false
+
+            } else {
+                console.log("success joining game!\n")
+                console.log("uid = " + player_uid.toString())
+
+                updateLocationOnServer()
+                awaitingJoinGame = false
+                joinedGame = true
+            }
+            
         } else if (xhr.readyState == 4) {
             // TODO: is this correct?
             awaitingJoinGame = false
@@ -141,27 +170,6 @@ function leaveGameSync() {
         console.log("sent! " + player_uid.toString());
     }
 }
-
-/*
-function leaveGameAsyncNoMatterWhat() {
-    let serverIp = "https://34.82.79.41:7555";
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", serverIp + "/player/leavegame?uid=" + player_uid, true);
-    xhr.setRequestHeader('Content-Type', 'text/plain');
-    xhr.setRequestHeader('Keep-Alive', 'true');
-    xhr.onreadystatechange = function() { 
-        // 4 means done 
-        if(xhr.readyState == 4 && xhr.status == 200) {
-            console.log("server accepts leaving game")
-            
-            player_uid = -1
-            joinedGame = false
-        }
-    }
-    xhr.timeout = 2000
-    xhr.send();
-}*/
 
 function sendHeartbeat() {
     if (awaitingJoinGame) {
@@ -346,3 +354,59 @@ function stopHeartbeats() {
 }
 
 startHeartbeats()
+
+
+// --------------------
+// input
+
+document.getElementById('pacman').ondragstart = function() { return false; };
+document.getElementById('blue').ondragstart = function() { return false; };
+document.getElementById('red').ondragstart = function() { return false; };
+document.getElementById('orange').ondragstart = function() { return false; };
+document.getElementById('pink').ondragstart = function() { return false; };
+let shadow = "-moz-box-shadow: 0 0 10px #222; -webkit-box-shadow: 0 0 10px #222; box-shadow: 0 0 10px #222;"
+
+function onClickPacman() {
+    selectedCharacter = 0
+    document.getElementById("pacman").style = shadow
+    document.getElementById("blue").style = ""
+    document.getElementById("red").style = ""
+    document.getElementById("orange").style = ""
+    document.getElementById("pink").style = ""
+}
+
+function onClickBlue() {
+    selectedCharacter = 4
+    document.getElementById("pacman").style = ""
+    document.getElementById("blue").style = shadow
+    document.getElementById("red").style = ""
+    document.getElementById("orange").style = ""
+    document.getElementById("pink").style = ""
+}
+
+function onClickRed() {
+    selectedCharacter = 1
+    document.getElementById("pacman").style = ""
+    document.getElementById("blue").style = ""
+    document.getElementById("red").style = shadow
+    document.getElementById("orange").style = ""
+    document.getElementById("pink").style = ""
+}
+
+function onClickOrange() {
+    selectedCharacter = 3
+    document.getElementById("pacman").style = ""
+    document.getElementById("blue").style = ""
+    document.getElementById("red").style = ""
+    document.getElementById("orange").style = shadow
+    document.getElementById("pink").style = ""
+}
+
+function onClickPink() {
+    selectedCharacter = 2
+    document.getElementById("pacman").style = ""
+    document.getElementById("blue").style = ""
+    document.getElementById("red").style = ""
+    document.getElementById("orange").style = ""
+    document.getElementById("pink").style = shadow
+}

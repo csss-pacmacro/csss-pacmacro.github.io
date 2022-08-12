@@ -1,0 +1,13 @@
+.choice-icon {
+    background: none;
+
+    -moz-box-shadow: 0 0 0px #777;
+    -webkit-box-shadow: 0 0 0px #777;
+    box-shadow: 0 0 0px #777;
+}
+
+.choice-icon:hover {
+    -moz-box-shadow: 0 0 10px #777;
+    -webkit-box-shadow: 0 0 10px #777;
+    box-shadow: 0 0 10px #777;
+}

@@ -51,6 +51,8 @@ function getPlayerData() {
                 let name = playerList[i].split(",")[1]
                 let lat = playerList[i].split(",")[2]
                 let lng = playerList[i].split(",")[3]
+                let png = playerList[i].split(",")[4]
+                let char = playerList[i].split(",")[5]
 
                 markerList[i].setLabel(name)
                 markerList[i].setPosition({lat:parseFloat(lat), lng:parseFloat(lng)})

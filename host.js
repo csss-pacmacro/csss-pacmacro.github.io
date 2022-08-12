@@ -11,6 +11,13 @@ var lineStorage = []; // ditto
 
 var mapUpdateReq = null;
 
+var char_name = {};
+char_name[0] = "pacman"; 
+char_name[1] = "red"; 
+char_name[2] = "pink"; 
+char_name[3] = "orange"; 
+char_name[4] = "blue"; 
+
 // -----------------------------------
 
 var isHoldingCtrl = false;
@@ -413,8 +420,9 @@ function checkLobby() {
                 //console.log(xhr.responseText)
                 let time = parseFloat(playerList[i].split(",")[4])
                 let deltatime = currentTime - time
+                let char = char_name[parseInt(playerList[i].split(",")[5])]
 
-                let str = "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + " d: <span style=\"color:green;\">" + deltatime / 1000.0 + "s</span></p>";
+                let str = "<p>&nbsp;" + uid + " :: " + name + " @ " + lat + ", " + lng + " with: " + char + " d: <span style=\"color:green;\">" + deltatime / 1000.0 + "s</span></p>";
                 document.getElementById("lobby").innerHTML += str;
             }
 
