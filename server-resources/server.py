@@ -54,7 +54,7 @@ def generate_uid():
 
 thepassword = None
 
-class CORSHandler(BaseHTTPRequestHandler):
+class NotCORSHandler(BaseHTTPRequestHandler):
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -196,7 +196,7 @@ class CORSHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
-def run(server_class=HTTPServer, handler_class=CORSHandler, port=8080):
+def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
     

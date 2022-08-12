@@ -142,6 +142,7 @@ function leaveGameSync() {
     }
 }
 
+/*
 function leaveGameAsyncNoMatterWhat() {
     let serverIp = "https://34.82.79.41:7555";
 
@@ -160,8 +161,7 @@ function leaveGameAsyncNoMatterWhat() {
     }
     xhr.timeout = 2000
     xhr.send();
-
-}
+}*/
 
 function sendHeartbeat() {
     if (awaitingJoinGame) {
