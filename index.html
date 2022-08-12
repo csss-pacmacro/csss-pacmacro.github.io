@@ -5,18 +5,29 @@
         <title>Pacmacro Main Page</title>
     </head>
     
+    <!-- <body style="background-image: url(res/pac.png)"> -->
     <body>
         <h2>Pacmacro Main Page</h2>
-        <p>Welcome to PacMacro v2!</p>
-        <p>There are 3 pages:</p>
-        <ul>
-            <li>go to <a href="host.html">host page</a></li> 
-            <!-- TODO: needs password -> encrypt it somehow??? -> CryptoJS.AES.encrypt("Message", "Secret Passphrase"); -->
-            <li>go to <a href="viewer.html">viewer page</a></li> 
-            <!-- just asking the server who is where -->
-            <li>go to <a href="player.html">player page</a></li> 
-            <!-- TODO: device ID will be remebered by the server for 1 round -->
-        </ul>
+
+        <div style="background-color: white; width: 300px; padding: 16px;">
+            <p>There are 3 pages:</p>
+            <ul>
+                <li>go to <a href="host.html">host page</a></li> 
+                <!-- TODO: needs password -> encrypt it somehow??? -> CryptoJS.AES.encrypt("Message", "Secret Passphrase"); -->
+                <li>go to <a href="viewer.html">viewer page</a></li> 
+                <!-- just asking the server who is where -->
+                <li>go to <a href="player.html">player page</a></li> 
+                <!-- TODO: device ID will be remebered by the server for 1 round -->
+            </ul>
+        </div>
+
+        <div style="margin: auto; left: 50%; width: 512px; text-align: center; background-color: white; padding: 2px; border-style: solid; border-width: 2px; border-color: white; border-radius: 2px;">
+            <img src="res/graphic.png" style="image-rendering: pixelated; " height=512 width=512/>
+            <h3>One day pacman and his friends were transported to SFU as a freak byproduct of some r&d at bitquill.</h3>
+            <h1>Unfortunately the chase is still on!</h1>
+        </div>
+
+        
     </body>
 
 </html>

@@ -226,11 +226,11 @@ def check_players_active():
     current_time = datetime.datetime.now()
 
     garbage = []
-    for player in g_players_in_lobby:
-        if (current_time - player["last_update"]) > HEARTBEAT_LENGTH:
+    for uid in g_players_in_lobby:
+        if (current_time - g_players_in_lobby[uid]["last_update"]) > HEARTBEAT_LENGTH:
             # drop player (& send them a response if they ask a question)
-            g_recently_dropped_players[player["uid"]] = player
-            garbage.append(player["uid"])
+            g_recently_dropped_players[uid] = g_players_in_lobby[uid]
+            garbage.append(uid)
 
     for uid in garbage:
         if uid in g_players_in_lobby:
