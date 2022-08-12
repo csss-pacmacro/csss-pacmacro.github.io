@@ -53,7 +53,6 @@ function joinGame() {
     xhr.onreadystatechange = function() { 
         // 4 means done
         if(xhr.readyState == 4 && xhr.status == 200) {
-            console.log(xhr.responseText)
             player_uid = parseInt(xhr.responseText.split("\n")[1]);
             
             if (player_uid == -1) {
@@ -366,7 +365,7 @@ document.getElementById('blue').ondragstart = function() { return false; };
 document.getElementById('red').ondragstart = function() { return false; };
 document.getElementById('orange').ondragstart = function() { return false; };
 document.getElementById('pink').ondragstart = function() { return false; };
-let shadow = "-moz-box-shadow: 0 0 10px #222; -webkit-box-shadow: 0 0 10px #222; box-shadow: 0 0 10px #222;"
+let shadow = "-moz-box-shadow: 0 0 16px #111; -webkit-box-shadow: 0 0 16px #111; box-shadow: 0 0 16px #111;"
 
 function onClickPacman() {
     selectedCharacter = 0
@@ -420,13 +419,13 @@ function onClickPink() {
 
 function updateSpaceOpenStyle() {
     if (spaceOpen0 == 0)
-        document.getElementById("pacman").style += "filter: saturate(100%) brightness(65%);"
+        document.getElementById("pacman").style += "; filter: saturate(100%) brightness(60%);"
     if (spaceOpen1 == 0)
-        document.getElementById("red").style += "filter: saturate(100%) brightness(65%);"
+        document.getElementById("red").style += "; filter: saturate(100%) brightness(60%);"
     if (spaceOpen2 == 0)
-        document.getElementById("pink").style += "filter: saturate(100%) brightness(65%);"
+        document.getElementById("pink").style += "; filter: saturate(100%) brightness(60%);"
     if (spaceOpen3 == 0)
-        document.getElementById("orange").style += "filter: saturate(100%) brightness(65%);"
+        document.getElementById("orange").style += "; filter: saturate(100%) brightness(60%);"
     if (spaceOpen4 == 0)
-        document.getElementById("blue").style += "filter: saturate(100%) brightness(65%);"
+        document.getElementById("blue").style += "; filter: saturate(100%) brightness(60%);"
 }
