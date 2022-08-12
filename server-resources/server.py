@@ -203,6 +203,8 @@ def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
 
+    print(handler_class.request_queue_size)
+
     httpd = server_class(server_address, handler_class)
     httpd.socket = ssl.wrap_socket(
         httpd.socket, server_side=True, 
