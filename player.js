@@ -64,6 +64,8 @@ function joinGame() {
                 spaceOpen3 = parseInt(xhr.responseText.split("\n")[2][3]);
                 spaceOpen4 = parseInt(xhr.responseText.split("\n")[2][4]);
 
+                updateSpaceOpenStyle()
+
                 // TODO: disable characters that have been chosen
 
                 console.log(spaceOpen0 + " " + spaceOpen1 + " " + spaceOpen2 + " " + spaceOpen3 + " " + spaceOpen4)
@@ -373,6 +375,7 @@ function onClickPacman() {
     document.getElementById("red").style = ""
     document.getElementById("orange").style = ""
     document.getElementById("pink").style = ""
+    updateSpaceOpenStyle()
 }
 
 function onClickBlue() {
@@ -382,6 +385,7 @@ function onClickBlue() {
     document.getElementById("red").style = ""
     document.getElementById("orange").style = ""
     document.getElementById("pink").style = ""
+    updateSpaceOpenStyle()
 }
 
 function onClickRed() {
@@ -391,6 +395,7 @@ function onClickRed() {
     document.getElementById("red").style = shadow
     document.getElementById("orange").style = ""
     document.getElementById("pink").style = ""
+    updateSpaceOpenStyle()
 }
 
 function onClickOrange() {
@@ -400,6 +405,7 @@ function onClickOrange() {
     document.getElementById("red").style = ""
     document.getElementById("orange").style = shadow
     document.getElementById("pink").style = ""
+    updateSpaceOpenStyle()
 }
 
 function onClickPink() {
@@ -409,4 +415,18 @@ function onClickPink() {
     document.getElementById("red").style = ""
     document.getElementById("orange").style = ""
     document.getElementById("pink").style = shadow
+    updateSpaceOpenStyle()
+}
+
+function updateSpaceOpenStyle() {
+    if (spaceOpen0)
+        document.getElementById("pacman").style += "filter: saturate(100%) brightness(65%);"
+    if (spaceOpen1)
+        document.getElementById("red").style += "filter: saturate(100%) brightness(65%);"
+    if (spaceOpen2)
+        document.getElementById("pink").style += "filter: saturate(100%) brightness(65%);"
+    if (spaceOpen3)
+        document.getElementById("orange").style += "filter: saturate(100%) brightness(65%);"
+    if (spaceOpen4)
+        document.getElementById("blue").style += "filter: saturate(100%) brightness(65%);"
 }
