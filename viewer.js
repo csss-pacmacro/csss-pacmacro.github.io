@@ -43,6 +43,7 @@ function getPlayerData() {
                 marker.setMap(null);
             }
             
+            let currentTime = parseFloat(Date.now())
             for (let i = 0; i < playerList.length; i++) {
                 if (playerList[i] == "")
                     break;
@@ -53,11 +54,12 @@ function getPlayerData() {
                 let lng = playerList[i].split(",")[3]
                 let time = parseFloat(playerList[i].split(",")[4])
                 let deltatime = currentTime - time
-                let char = char_name[parseInt(playerList[i].split(",")[5])]
-
+                let char = parseInt(playerList[i].split(",")[5])
 
                 markerList[i].setLabel(name)
                 markerList[i].setPosition({lat:parseFloat(lat), lng:parseFloat(lng)})
+                
+                // TODO: give markers images
             }
 
         } else {
@@ -90,7 +92,7 @@ function showPosition(position) {
     // update current location
     lastCurrentLoc = currentLoc;
     currentLoc = {lat: position.coords.latitude, lng: position.coords.longitude};
-    
+
     if (lastCurrentLoc == null)
         map.setCenter(currentLoc);
     map.setTilt(0);
