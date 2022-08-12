@@ -204,7 +204,7 @@ function sendHeartbeat() {
 var geo = document.getElementById("geo");
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: 2000, enableHighAccuracy: true});
+        navigator.geolocation.watchPosition(showPosition, showError, {maximumAge: 0, timeout: 5000, enableHighAccuracy: true});
     } else {
         geo.innerHTML = "Geolocation is not supported by this browser.";
     }
@@ -298,7 +298,7 @@ window.addEventListener('pagehide', () => {
         method:'POST',
         headers:{
             'Content-Type': 'text/plain',
-            'Keep-Alive': true,
+            //'Keep-Alive': true,
         },
         body: "a",
         keepalive: true // this is important!

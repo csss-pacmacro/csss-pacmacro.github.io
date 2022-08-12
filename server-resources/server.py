@@ -199,7 +199,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
-    
+
+    handler_class.request_queue_size = 128 # This should be plenty
     httpd = server_class(server_address, handler_class)
     httpd.socket = ssl.wrap_socket(
         httpd.socket, server_side=True, 
@@ -220,10 +221,20 @@ def run(server_class=HTTPServer, handler_class=NotCORSHandler, port=7555):
 # -------------------------------------------------
 # game functions:
 
+g_time_since = datetime.datetime.utcnow()
+
 # This function checks if any players haven't sent a heartbeat or a location in 20s, if not then they are dropped. 
 # They get told about this the next time they ask about the game
 def check_players_active():
+    global g_time_since
+    
     current_time = datetime.datetime.utcnow()
+    
+    # only call this function once per second, because it might be hefty
+    if (current_time - g_time_since).seconds < 1:
+        return
+
+    g_time_since = current_time
 
     garbage = []
     for uid in g_players_in_lobby:
