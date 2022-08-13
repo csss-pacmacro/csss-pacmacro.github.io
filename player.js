@@ -439,3 +439,67 @@ function updateSpaceOpenStyle() {
     if (spaceOpen4 == 0)
         document.getElementById("blue").style += "; filter: saturate(100%) brightness(60%);"
 }
+
+var noSleep = new NoSleep();
+
+// stop the screen from turning off automatically
+document.addEventListener('click', function enableNoSleep() {
+    document.removeEventListener('click', enableNoSleep, false);
+    noSleep.enable();
+}, false);
+
+// --------------------
+// compute device heading:
+
+var heading;
+
+
+const handleOrientation = (event) => {
+    if (event.webkitCompassHeading) {
+        // some devices don't understand "alpha" (especially IOS devices)
+        heading = event.webkitCompassHeading;
+    } else {
+        heading = compassHeading(event.alpha, event.beta, event.gamma);
+    }
+
+    let dir = ['north','north east', 'east','south east', 'south','south west', 'west','north west'][Math.floor(((heading+22.5)%360)/45)]
+    document.getElementById("direction").innerHTML = dir.toString() + " at " + heading.toString()
+};
+
+const compassHeading = (alpha, beta, gamma) => {
+
+    // Convert degrees to radians
+    const alphaRad = alpha * (Math.PI / 180);
+    const betaRad = beta * (Math.PI / 180);
+    const gammaRad = gamma * (Math.PI / 180);
+
+    // Calculate equation components
+    const cA = Math.cos(alphaRad);
+    const sA = Math.sin(alphaRad);
+    const cB = Math.cos(betaRad);
+    const sB = Math.sin(betaRad);
+    const cG = Math.cos(gammaRad);
+    const sG = Math.sin(gammaRad);
+
+    // Calculate A, B, C rotation components
+    const rA = - cA * sG - sA * sB * cG;
+    const rB = - sA * sG + cA * sB * cG;
+    const rC = - cB * cG;
+
+    // Calculate compass heading
+    let compassHeading = Math.atan(rA / rB);
+
+    // Convert from half unit circle to whole unit circle
+    if(rB < 0) {
+        compassHeading += Math.PI;
+    }else if(rA < 0) {
+        compassHeading += 2 * Math.PI;
+    }
+
+    // Convert radians to degrees
+    compassHeading *= 180 / Math.PI;
+
+    return compassHeading;
+};
+
+window.addEventListener('deviceorientation', handleOrientation, false);
