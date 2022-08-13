@@ -502,7 +502,7 @@ const compassHeading = (alpha, beta, gamma) => {
     return compassHeading;
 };
 
-
+/*
 function requestOrientationPermission(){
     DeviceOrientationEvent.requestPermission()
     .then(response => {
@@ -511,7 +511,7 @@ function requestOrientationPermission(){
         }
     })
     .catch(console.error)
-}
+}*/
 
 function onClockOrientationPerms() {
     // feature detect
@@ -519,7 +519,7 @@ function onClockOrientationPerms() {
       DeviceOrientationEvent.requestPermission()
         .then(permissionState => {
           if (permissionState === 'granted') {
-            window.addEventListener('deviceorientation', () => {});
+            window.addEventListener('deviceorientation', handleOrientation, false);
           }
         })
         .catch(console.error);
