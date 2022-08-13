@@ -463,7 +463,7 @@ const handleOrientation = (event) => {
     }
 
     let dir = ['north','north east', 'east','south east', 'south','south west', 'west','north west'][Math.floor(((heading+22.5)%360)/45)]
-    document.getElementById("direction").innerHTML = dir.toString() + " at " + heading.toString()
+    document.getElementById("direction").innerHTML = dir + " at " + heading.toString()
 };
 
 const compassHeading = (alpha, beta, gamma) => {
