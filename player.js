@@ -503,3 +503,5 @@ const compassHeading = (alpha, beta, gamma) => {
 };
 
 window.addEventListener('deviceorientation', handleOrientation, false);
+
+DeviceOrientationEvent.requestPermission()
