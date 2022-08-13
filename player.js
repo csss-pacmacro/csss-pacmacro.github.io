@@ -502,6 +502,31 @@ const compassHeading = (alpha, beta, gamma) => {
     return compassHeading;
 };
 
-window.addEventListener('deviceorientation', handleOrientation, false);
 
-DeviceOrientationEvent.requestPermission()
+function requestOrientationPermission(){
+    DeviceOrientationEvent.requestPermission()
+    .then(response => {
+        if (response == 'granted') {
+            window.addEventListener('deviceorientation', handleOrientation, false)
+        }
+    })
+    .catch(console.error)
+}
+
+function onClockOrientationPerms() {
+    // feature detect
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            window.addEventListener('deviceorientation', () => {});
+          }
+        })
+        .catch(console.error);
+    } else {
+      // handle regular non iOS 13+ devices
+    }
+}
+
+//requestOrientationPermission();
+
