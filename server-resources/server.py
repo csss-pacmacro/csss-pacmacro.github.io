@@ -160,7 +160,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                     self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
 
-                update_file()
+                update_file(self.wfile)
 
         except Exception as e:
             print("bad error in GET request !!!")
@@ -206,7 +206,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                 del g_characters_taken[g_players_in_lobby[uid]["char"]]
                 del g_players_in_lobby[uid]
 
-                update_file()
+                update_file(self.wfile)
 
             elif target == "/player/updateloc" and ("uid" in argmap) and is_int(argmap["uid"])  and int(argmap["uid"]) in g_players_in_lobby:
                 # update player with data
@@ -217,7 +217,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
-                update_file()
+                update_file(self.wfile)
 
             elif target == "/player/heartbeat" and ("uid" in argmap) and is_int(argmap["uid"]) and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
@@ -303,10 +303,19 @@ def end_game():
     g_recently_dropped_players.clear()
 
 # write to file
-def update_file():
+def update_file(wfile):
     g_characters_taken_str = json.dumps(g_characters_taken)
     g_players_in_lobby_str = json.dumps(g_players_in_lobby)
     g_recently_dropped_players_str = json.dumps(g_recently_dropped_players)
+
+    print(g_characters_taken_str)
+    print(g_players_in_lobby_str)
+    print(g_recently_dropped_players_str)
+
+    wfile.write("out a>> {}".format(g_characters_taken_str).encode('utf-8'))
+    wfile.write("out b>> {}".format(g_players_in_lobby_str).encode('utf-8'))
+    wfile.write("out c>> {}".format(g_recently_dropped_players_str).encode('utf-8'))
+
 
     if g_characters_taken_str == "{}" and g_players_in_lobby_str == "{}" and g_recently_dropped_players_str == "{}":
         if os.path.exists("./instance_data.json"):
