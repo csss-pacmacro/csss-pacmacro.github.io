@@ -7,6 +7,7 @@ Usage::
 from http.server import BaseHTTPRequestHandler, SimpleHTTPRequestHandler, HTTPServer
 import os, logging, datetime, traceback
 import ssl
+import json
 
 # --------------------------------------------
 # globals:
@@ -159,6 +160,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                     self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
 
+                update_file()
+
         except Exception as e:
             print("bad error in GET request !!!")
             print(str(e))
@@ -202,6 +205,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                 uid = int(argmap["uid"])
                 del g_characters_taken[g_players_in_lobby[uid]["char"]]
                 del g_players_in_lobby[uid]
+
+                update_file()
 
             elif target == "/player/updateloc" and ("uid" in argmap) and is_int(argmap["uid"])  and int(argmap["uid"]) in g_players_in_lobby:
                 # update player with data
@@ -295,6 +300,43 @@ def end_game():
     # this
     g_recently_dropped_players.clear()
 
+# write to file
+def update_file():
+    g_characters_taken_str = json.dumps(g_characters_taken)
+    g_players_in_lobby_str = json.dumps(g_players_in_lobby)
+    g_recently_dropped_players_str = json.dumps(g_recently_dropped_players)
+
+    if g_characters_taken_str == "{}" and g_players_in_lobby_str == "{}" and g_recently_dropped_players_str == "{}":
+        if os.path.exists("./instance_data.json"):
+            os.remove("./instance_data.json")
+        return
+
+    if os.path.exists("./instance_data.json"):
+        os.remove("./instance_data.json")
+
+    # TODO: does this overwrite the file
+    with open("./instance_data.json", "w") as f:
+        f.write(g_characters_taken_str + "\n" + g_players_in_lobby_str + "\n" + g_recently_dropped_players_str)
+
+def load_info_from_file():
+    global g_characters_taken, g_players_in_lobby, g_recently_dropped_players
+    if os.path.exists("./instance_data.json"):
+        with open("./instance_data.json", "r") as f:
+            g_characters_taken_str = f.readline().strip()
+            g_players_in_lobby_str = f.readline().strip()
+            g_recently_dropped_players_str = f.readline().strip()
+
+            g_characters_taken = json.loads(g_characters_taken_str)
+            g_players_in_lobby = json.loads(g_players_in_lobby_str)
+            g_recently_dropped_players = json.loads(g_recently_dropped_players_str)
+
+            for key in g_characters_taken.keys():
+                g_players_in_lobby[key]["last_update"] = datetime.datetime.utcnow() # int(argmap["uid"])
+
+            for key in g_recently_dropped_players.keys():
+                g_recently_dropped_players[key]["last_update"] = datetime.datetime.utcnow()
+
+
 # -------------------------------------------------
 
 if __name__ == '__main__':
@@ -306,6 +348,8 @@ if __name__ == '__main__':
         thepassword = f.readline().strip()
 
     print("loading complete")
+
+    load_info_from_file()
 
     use_special_port = False
     if use_special_port:
