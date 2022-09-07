@@ -337,9 +337,9 @@ def load_info_from_file():
             g_players_in_lobby_str = f.readline().strip()
             g_recently_dropped_players_str = f.readline().strip()
 
-            g_characters_taken = json.loads(g_characters_taken_str)
-            g_players_in_lobby = json.loads(g_players_in_lobby_str)
-            g_recently_dropped_players = json.loads(g_recently_dropped_players_str)
+            g_characters_taken = json.loads(g_characters_taken_str, default=str)
+            g_players_in_lobby = json.loads(g_players_in_lobby_str, default=str)
+            g_recently_dropped_players = json.loads(g_recently_dropped_players_str, default=str)
 
             for key in g_characters_taken.keys():
                 g_players_in_lobby[key]["last_update"] = datetime.datetime.utcnow() # int(argmap["uid"])
