@@ -217,6 +217,8 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
+                update_file()
+
             elif target == "/player/heartbeat" and ("uid" in argmap) and is_int(argmap["uid"]) and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
