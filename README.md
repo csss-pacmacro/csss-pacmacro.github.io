@@ -13,7 +13,7 @@ test website
 - // not yet: `pip install pycryptodome`
 - update `password` file from "default" to something else
 - open tcp port 7555 on the google firewall, turn on http & https mode (make sure firewall allows tcp port 80 for http file serving)
-- TODO: instructions on how to give the server the power to update maps to github
+- TODO: instructions on how to give the server the power to update maps to github -> login to github & do a commit, then push.
 
 ### running instructions
 - run server script: `sudo python3 server.py 7555 &> log.txt &` This redirects stdout & stderr to log.txt & runs the process in the background 
