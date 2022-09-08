@@ -308,16 +308,10 @@ def update_file():
     g_players_in_lobby_str = json.dumps(g_players_in_lobby, default=str)
     g_recently_dropped_players_str = json.dumps(g_recently_dropped_players, default=str)
 
-    print(g_characters_taken_str)
-    print(g_players_in_lobby_str)
-    print(g_recently_dropped_players_str)
-#("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-#                        str(self.path), str(self.headers), post_data.decode('utf-8'))
     logging.info("out a>> {}\n".format(g_characters_taken_str).encode('utf-8'))
     logging.info("out b>> {}\n".format(g_players_in_lobby_str).encode('utf-8'))
     logging.info("out c>> {}\n".format(g_recently_dropped_players_str).encode('utf-8'))
     logging.info("out b real>> {}\n".format(g_players_in_lobby).encode('utf-8'))
-
 
     if g_characters_taken_str == "{}" and g_players_in_lobby_str == "{}" and g_recently_dropped_players_str == "{}":
         if os.path.exists("./instance_data.json"):
@@ -344,10 +338,12 @@ def load_info_from_file():
             g_recently_dropped_players = json.loads(g_recently_dropped_players_str)
 
             for key in g_characters_taken.keys():
-                g_players_in_lobby[key]["last_update"] = datetime.datetime.utcnow() # int(argmap["uid"])
+                g_players_in_lobby[int(key)] = g_players_in_lobby.pop(str(key))
+                g_players_in_lobby[int(key)]["last_update"] = datetime.datetime.utcnow() # int(argmap["uid"])
 
             for key in g_recently_dropped_players.keys():
-                g_recently_dropped_players[key]["last_update"] = datetime.datetime.utcnow()
+                g_recently_dropped_players[int(key)] = g_recently_dropped_players.pop(str(key))
+                g_recently_dropped_players[int(key)]["last_update"] = datetime.datetime.utcnow()
 
 
 # -------------------------------------------------
