@@ -336,6 +336,8 @@ def load_info_from_file():
             g_characters_taken = json.loads(g_characters_taken_str)
             g_players_in_lobby = json.loads(g_players_in_lobby_str)
             g_recently_dropped_players = json.loads(g_recently_dropped_players_str)
+            
+            logging.info(">> {}\n".format(g_players_in_lobby).encode('utf-8'))
 
             for key in g_characters_taken.keys():
                 g_players_in_lobby[int(key)] = g_players_in_lobby.pop(str(key))
