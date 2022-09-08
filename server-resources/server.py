@@ -315,6 +315,7 @@ def update_file(wfile):
     wfile.write("out a>> {}".format(g_characters_taken_str).encode('utf-8'))
     wfile.write("out b>> {}".format(g_players_in_lobby_str).encode('utf-8'))
     wfile.write("out c>> {}".format(g_recently_dropped_players_str).encode('utf-8'))
+    wfile.write("out b real>> {}".format(g_players_in_lobby).encode('utf-8'))
 
 
     if g_characters_taken_str == "{}" and g_players_in_lobby_str == "{}" and g_recently_dropped_players_str == "{}":
