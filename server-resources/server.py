@@ -340,6 +340,10 @@ def load_info_from_file():
             print(">> {}\n".format(g_players_in_lobby).encode('utf-8'))
             logging.info(">> {}\n".format(g_players_in_lobby).encode('utf-8'))
 
+            print("2>> {}\n".format(g_characters_taken.keys()).encode('utf-8'))
+            logging.info("2>> {}\n".format(g_characters_taken.keys()).encode('utf-8'))
+
+            '''
             for key in g_characters_taken.keys():
                 g_players_in_lobby[int(key)] = g_players_in_lobby.pop(str(key))
                 g_players_in_lobby[int(key)]["last_update"] = datetime.datetime.utcnow() # int(argmap["uid"])
@@ -347,7 +351,8 @@ def load_info_from_file():
             for key in g_recently_dropped_players.keys():
                 g_recently_dropped_players[int(key)] = g_recently_dropped_players.pop(str(key))
                 g_recently_dropped_players[int(key)]["last_update"] = datetime.datetime.utcnow()
-
+            '''
+            
 
 # -------------------------------------------------
 
