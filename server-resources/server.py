@@ -160,7 +160,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                     self.wfile.write(("\n"+str(player_uid)).encode('utf-8'))
 
-                update_file(self.wfile)
+                update_file()
 
         except Exception as e:
             print("bad error in GET request !!!")
@@ -206,7 +206,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
                 del g_characters_taken[g_players_in_lobby[uid]["char"]]
                 del g_players_in_lobby[uid]
 
-                update_file(self.wfile)
+                update_file()
 
             elif target == "/player/updateloc" and ("uid" in argmap) and is_int(argmap["uid"])  and int(argmap["uid"]) in g_players_in_lobby:
                 # update player with data
@@ -217,7 +217,7 @@ class NotCORSHandler(BaseHTTPRequestHandler):
 
                 g_players_in_lobby[int(argmap["uid"])]["last_update"] = datetime.datetime.utcnow()
 
-                update_file(self.wfile)
+                update_file()
 
             elif target == "/player/heartbeat" and ("uid" in argmap) and is_int(argmap["uid"]) and int(argmap["uid"]) in g_players_in_lobby:
                 # update the player heartbeat map & don't kick player \
@@ -303,7 +303,7 @@ def end_game():
     g_recently_dropped_players.clear()
 
 # write to file
-def update_file(wfile):
+def update_file():
     g_characters_taken_str = json.dumps(g_characters_taken, default=str)
     g_players_in_lobby_str = json.dumps(g_players_in_lobby, default=str)
     g_recently_dropped_players_str = json.dumps(g_recently_dropped_players, default=str)
@@ -311,11 +311,12 @@ def update_file(wfile):
     print(g_characters_taken_str)
     print(g_players_in_lobby_str)
     print(g_recently_dropped_players_str)
-
-    wfile.write("out a>> {}".format(g_characters_taken_str).encode('utf-8'))
-    wfile.write("out b>> {}".format(g_players_in_lobby_str).encode('utf-8'))
-    wfile.write("out c>> {}".format(g_recently_dropped_players_str).encode('utf-8'))
-    wfile.write("out b real>> {}".format(g_players_in_lobby).encode('utf-8'))
+#("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+#                        str(self.path), str(self.headers), post_data.decode('utf-8'))
+    logging.info("out a>> {}\n".format(g_characters_taken_str).encode('utf-8'))
+    logging.info("out b>> {}\n".format(g_players_in_lobby_str).encode('utf-8'))
+    logging.info("out c>> {}\n".format(g_recently_dropped_players_str).encode('utf-8'))
+    logging.info("out b real>> {}\n".format(g_players_in_lobby).encode('utf-8'))
 
 
     if g_characters_taken_str == "{}" and g_players_in_lobby_str == "{}" and g_recently_dropped_players_str == "{}":
