@@ -49,7 +49,7 @@ body {
     text-decoration: none;
     color: initial;
 
-    animation: rotate-play 1.2s ease-out 0s 1 normal forwards;
+    animation: rotate-play 0.8s ease-out 0s 1 normal forwards;
     animation-play-state: running;
 }
 
