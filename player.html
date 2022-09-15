@@ -20,7 +20,6 @@
             <button onclick="leaveGame()" style="height: 32px">Leave the current game</button>
 
             <br>
-            <br>
             <label>choose a character:</label>
             <div>
                 <img class="choice-icon" id="pacman" src="res/sprites/pacman.png" onclick="onClickPacman()" width="128" height="128">
@@ -28,6 +27,12 @@
                 <img class="choice-icon" id="red" src="res/sprites/red.png" onclick="onClickRed()" width="128" height="128">
                 <img class="choice-icon" id="orange" src="res/sprites/orange.png" onclick="onClickOrange()" width="128" height="128">
                 <img class="choice-icon" id="pink" src="res/sprites/pink.png" onclick="onClickPink()" width="128" height="128">
+                <br>
+                <div style="display:inline-block; width: 128px; text-align: center;"><p style="display:inline-block; color: #ee4; background-color: black; text-align: center;"><b>"Sunflower"</b></p></div>
+                <div style="display:inline-block; width: 128px; text-align: center;"><p style="display:inline-block; color: #5ff; background-color: black; text-align: center;"><b>"Little Freak"</b></p></div>
+                <div style="display:inline-block; width: 128px; text-align: center;"><p style="display:inline-block; color: #f45; background-color: black; text-align: center;"><b>"Watermelon Sugar"</b></p></div>
+                <div style="display:inline-block; width: 128px; text-align: center;"><p style="display:inline-block; color: #fa4; background-color: black; text-align: center;"><b>"Cinema"</b></p></div>
+                <div style="display:inline-block; width: 128px; text-align: center;"><p style="display:inline-block; color: #f9c; background-color: black; text-align: center;"><b>"Cherry"</b></p></div>
             </div>
 
             <div id="response"> 
@@ -37,13 +42,19 @@
         
         <h4>location details:</h4>
         <p id="geo"></p>
-        <div id="map" style="height: 400px; width: 400px;"></div>
+        <div id="map" style="height: 400px; width: 600px;"></div>
         <p>note: please don't close the page directly on ios</p>
         <br>
 
         <button onclick="onClockOrientationPerms()">enable orientation permissions</button>
 
         <p id="direction" style="font-size: 3em;">direction...</p>
+
+        <!--sponsor message-->
+        <div style="position: relative; right: 12px; bottom: -172px; float: right;">
+            <p style="transform: translate(0, 10px);">sponsored by</p>
+            <a href="https://www.bitquill.com/"><img src="res/bitquill-logo.png" style="height: 64px; display: block;" alt="Bitquill is awesome :)"/></a>
+        </div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuJL-lFKGlIWGQhhm6wezUDI6WYgWW0PU&callback=initMap&v=quarterly" defer></script>
         <script src="player.js"></script>

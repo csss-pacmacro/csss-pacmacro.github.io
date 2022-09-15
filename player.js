@@ -230,8 +230,8 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    geo.innerHTML = "Latitude: " + position.coords.latitude +
-                    "<br>Longitude: " + position.coords.longitude;
+    geo.innerHTML = ""; //"Latitude: " + position.coords.latitude +
+                    //"<br>Longitude: " + position.coords.longitude;
     
     // update current location
     currentLoc = {lat: position.coords.latitude, lng: position.coords.longitude};
@@ -239,8 +239,8 @@ function showPosition(position) {
     map.setTilt(0);
     marker.setPosition(currentLoc);
 
-    geo.innerHTML += "<br> time: " + position.timestamp;
-    geo.innerHTML += "<br> speed: " + position.coords.speed;
+    //geo.innerHTML += "<br> time: " + position.timestamp;
+    geo.innerHTML += "spd: " + position.coords.speed;
     geo.innerHTML += "<br> acc:" + position.coords.accuracy;
 
     // do a post request, giving this info to the server
