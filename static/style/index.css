@@ -21,13 +21,22 @@ body {
 #title-img {
     display: block;
     margin: auto;
-
+    margin-bottom: 24px;
+    
     max-width: 768px;
     width: 100%;
     height: auto;
 
     image-rendering: pixelated;
 } 
+
+#content {
+    margin: auto;  
+    max-width: 100%;
+    text-align: center; 
+    background-color: #efd13b; 
+    padding: 2px; 
+}
 
 #start-button {
     display: block;
@@ -36,17 +45,40 @@ body {
 
     font-size: 2em;
     background-color: #fff;
-    color: #111;
+    color: #000;
     font-weight: bold;
 
     width: 200px;
     height: 56px;
 
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    margin: 48px auto 0 auto;
+
     -webkit-appearance: button;
     -moz-appearance: button;
     appearance: button;
-    
-    margin: 48px auto 0 auto;
+
+    padding: 0px;
+    transition: padding 0.12s ease-in-out, margin-top 0.12s ease-in-out;
+}
+#start-button:hover {
+    padding: 8px;
+    margin-top: 40px;
+
+    color: #111;
+}
+#start-button:active {
+    padding: 0;
+    margin-top: 48px;
+
+    background-color: #c4b980;
+    color: #555;
+}
+#start-button > * {
+    vertical-align: middle;
 }
 
 /* -------- animations -------- */
