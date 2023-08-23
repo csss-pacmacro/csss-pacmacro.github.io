@@ -2,46 +2,24 @@
 
 <html>
     <head>
-        <title>Pacmacro Main Page</title>
-        <link rel="stylesheet" href="main.css">
+        <title>PacMACRO</title>
+        <link rel="stylesheet" href="./static/style/index.css">
     </head>
     
     <body style="background-image: url(res/pac.png);">
-        <div id="middle" style="background-color: #fee761; height: 100%;">
+        <div id="middle">
 
-            <img src="res/pac-macro-title.png" style="image-rendering: pixelated; margin: auto; max-width: 768px; width: 100%; height: auto; display: block;" alt="Pac Macro"/>
+            <img src="./static/img/pac-macro-title.png" style="image-rendering: pixelated; margin: auto; max-width: 768px; width: 100%; height: auto; display: block;" alt="Pac Macro"/>
 
             <div style="margin: auto; left: 50%; width: 512px; text-align: center; background-color: white; padding: 2px; border-style: solid; border-width: 2px; border-color: white; border-radius: 16px;">
-                <p>One day Pacman and his friends were transported to SFU as a freak byproduct of some research & development at Bitquill <sup><em><a href="https://xkcd.com/285/">[citation needed]</a></em></sup></p> <!--https://en.wikipedia.org/wiki/Wikipedia:Citation_needed-->
-                <img src="res/graphic.png" style="image-rendering: pixelated" onmouseover="this.src='res/graphic-2.png';" onmouseout="this.src='res/graphic.png';" height=256 width=256/>
+                <p>One day Pacman and his friends were transported to SFU as a freak byproduct of some research in TASC1<sup><em><a href="https://xkcd.com/285/">[citation needed]</a></em></sup></p>
                 <h2 style="margin-top: 8px">Unfortunately the chase is still on!</h2>
             </div>
 
-            <!--sponsor message-->
-            <div style="position: relative; right: 12px; bottom: -172px; float: right;">
-                <p style="transform: translate(0, 10px);">sponsored by</p>
-                <a href="https://www.bitquill.com/"><img src="res/bitquill-logo.png" style="height: 64px; display: block;" alt="Bitquill is awesome :)"/></a>
-            </div>
-
-            <a href="player.html" id="start-button" style="margin-left: 10%; margin-right: 10%; margin-top: 20px; max-width: 512px; width: 80%%; display: block;"><img src="res/play-game.png" style="image-rendering: pixelated; max-width: 512px; width: 100%; height: auto;" alt="Play Game!"/></a>
-
-            <div id="debug-controls" style="display: none; background-color: white; width: 300px; padding: 16px; font-size: 1.25em;">
-                <p style="margin-top: 0px;">pages:</p>
-                <ul style="margin-bottom: 0px;">
-                    <li>go to <a href="rules.html">rules page</a></li> 
-                    <li>go to <a href="host.html">host page</a></li> 
-                    <!-- TODO: needs password -> encrypt it somehow??? -> CryptoJS.AES.encrypt("Message", "Secret Passphrase"); -->
-                    <li>go to <a href="viewer.html">viewer page</a></li> 
-                    <!-- just asking the server who is where -->
-                    <li>go to <a href="player.html">player page</a></li> 
-                    <!-- TODO: device ID will be remebered by the server for 1 round -->
-                </ul>
-            </div>
+            <a href="player" id="start-button">Play Game</a>
         </div>
 
-        <button style="position: absolute; bottom: 4px; left: 4px;" onclick="toggleVis()">debug-toggle</button>
-
-        <script src="index.js"></script>
+        <script src="./static/js/index.js"></script>
     </body>
 
 </html>
