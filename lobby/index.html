@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="initial-scale=1.0">
+        <title>PacMACRO Lobby</title>
+
+        <link rel="stylesheet" href="../static/style/main.css">
+        <link rel="stylesheet" href="../static/style/lobby.css">
+    </head>
+    <body>
+        <div id="middle">
+            <div style="height: 12px;"></div>
+            <img id="title-img" src="../static/img/pac-macro-title.png" alt="Pac Macro"/>
+            
+            <div id="content">
+                <div style="max-width: 512px; margin: 12px auto;">
+                    <p>In order to play <b>PacMacro</b>, please join the lobby and await instructions from your frosh leaders!</p>
+                    <span>What's your name? </span>
+                    <input id="join-name" type="text"></input>
+                    <button id="join-lobby">join lobby</button>
+                </div>
+            </div>
+
+            <div id="lobby">
+                <div id="lobby-container">
+                    <h2>Lobby</h2>
+                    <ul id="lobby-list">
+                        <li>Person A</li>
+                        <li>Person B (PacMan)</li>
+                        <li>Person C (Pink Ghost)</li>
+                        <li>Person D (Red Ghost)</li>
+                        <li>Person E (Red Ghost)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        
+        <script src="../static/js/lobby.js"></script>
+    </body>
+</html>

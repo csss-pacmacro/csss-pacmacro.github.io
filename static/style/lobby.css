@@ -1,0 +1,19 @@
+#lobby-container {
+    max-width: 512px; 
+    margin: 0 auto 12px auto;
+    padding: 8px;
+}
+
+#lobby-list > li {
+    padding: 12px;
+    background-color: #fff4bb;
+    margin: 12px;
+
+    box-shadow: 2px 2px 5px #837e4e;
+
+    transition: background-color 0.15s ease-out;
+}
+
+#lobby-list > li:hover {
+    background-color: #dac041;
+}

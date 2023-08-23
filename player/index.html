@@ -4,18 +4,31 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="initial-scale=1.0">
-        <title>PacMACRO Join</title>
-        <link rel="stylesheet" href="../static/style/index.css">
+        <title>PacMACRO Player</title>
+
+        <link rel="stylesheet" href="../static/style/main.css">
+        <link rel="stylesheet" href="../static/style/player.css">
     </head>
     <body>
         <div id="middle">
-            <img id="title-img" src="../static/img/pac-macro-title.png" alt="Pac Macro"/>
+            <img id="title-img" style="width: 296px; margin-bottom: 0;" src="../static/img/pac-macro-title.png" alt="Pac Macro"/>
             
             <div id="content">
-                <p>Join!</p>
+                <p id="geo">
+                    You are <b style="color: #ecc30e;">PacMan</b>
+                </p>
+                <div id="map" style="height: 400px; width: 100%;"></div>
+                <p>note: please don't close the page directly on ios</p>
+            </div>
+            <br>
+
+            <div id="direction-bar">
+                <button id="orientation-permissions">Enable Orientation Permissions</button>
+                <p id="direction" hidden>direction...</p>
             </div>
         </div>
         
-        <script src="./static/js/index.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQ7DR6Nb2WoP97hnLIIujulIB0YU7_jig&callback=initMap&v=quarterly" defer></script>
+        <script src="../static/js/player.js"></script>
     </body>
 </html>
