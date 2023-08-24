@@ -7,7 +7,12 @@ function initMap() {
     let zero = { lat: 0, lng: 0 };
     map = new google.maps.Map(
         document.getElementById("map"), 
-        { zoom: 4, center: zero } 
+        { 
+            zoom: 4, 
+            center: zero, 
+            streetViewControl: false,
+            rotateControl: false,
+        },
     );
     map.setZoom(14.5);
 
@@ -119,17 +124,6 @@ window.addEventListener("popstate", function(e) {
 
 document.getElementById("orientation-permissions").onclick = onClockOrientationPerms;
 
-/*
-function requestOrientationPermission(){
-    DeviceOrientationEvent.requestPermission()
-    .then(response => {
-        if (response == 'granted') {
-            window.addEventListener('deviceorientation', handleOrientation, false)
-        }
-    })
-    .catch(console.error)
-}*/
-
 var heading;
 function onClockOrientationPerms() {
     const compassHeading = (alpha, beta, gamma) => {
@@ -201,5 +195,3 @@ function updateOrientationPanel() {
     button.hidden = true;
     display.hidden = false;
 }
-
-//requestOrientationPermission();

@@ -1,0 +1,19 @@
+#game-start-bar {
+    margin: auto;  
+    max-width: 90%;
+    text-align: center; 
+    background-color: #fff; 
+    padding: 2px;
+}
+
+#start-game {
+    padding: 8px;
+    width: 312px;
+    margin: 12px;
+}
+
+#pause-game {
+    padding: 8px;
+    width: 312px;
+    margin: 12px;
+}

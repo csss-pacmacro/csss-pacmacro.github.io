@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="initial-scale=1.0">
+        <title>PacMacro Admin</title>
+
+        <link rel="stylesheet" href="../static/style/main.css">
+        <link rel="stylesheet" href="../static/style/lobby.css">
+        <link rel="stylesheet" href="../static/style/admin.css">
+    </head>
+    <body>
+        <div id="middle" style="max-width: 1000px;">
+            <div style="height: 12px;"></div>
+            <h2 style="text-align: center;">PacMacro Admin Page</h2>
+
+            <div id="content">
+                <h3>Map Editor <button id="hide-map-editor">hide</button></h3>
+                <br>
+                <p>TODO: map editor</p>
+                <br>
+            </div>
+
+            <div id="admin-lobby" style="margin: 24px;">
+                <h3>Player Stats <button id="hide-player-stats">hide</button></h3>
+                <ul id="lobby-list">
+                    <li>Person A</li>
+                    <li>Person B (PacMan)</li>
+                    <li>Person C (Pink Ghost)</li>
+                    <li>Person D (Red Ghost)</li>
+                    <li>Person E (Red Ghost)</li>
+                </ul>
+            </div>
+            <br>
+
+            <div style="margin: 24px;">
+                <h3>Game Stats <button id="hide-game-stats">hide</button></h3>
+                <div id="game-start-bar">
+                    <button id="start-game">Start Game</button>
+                    <button id="pause-game">Pause Game</button>
+                    <p>Game Running For <span id="time-elapsed">3.14</span> / <span id="time-total">300</time> s</p>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQ7DR6Nb2WoP97hnLIIujulIB0YU7_jig&callback=initMap&v=quarterly" defer></script>
+        <script src="../static/js/viewer.js"></script>
+    </body>
+</html>
